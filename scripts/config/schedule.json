@@ -1,0 +1,33 @@
+{
+  "_note": "Publishing cadence set by the operator. Weekday numbers are Python's: Monday=0 .. Sunday=6. Reminder times are local to whatever machine runs the scheduled task; this repo does not install the task, it prints the entry for you to install.",
+  "longform": {
+    "known-unknowns": {"weekdays": [1, 4], "_weekdays_human": "Tuesday and Friday"},
+    "stickman": {
+      "weekdays": [4],
+      "_weekdays_human": "Friday",
+      "requires_brand_ready": true,
+      "_brand_note": "Stickman longform stays unschedulable until channels/stickman/brand.json marks every brand asset done. The canon calls this channel's identity blocked, so the schedule respects that rather than routing around it."
+    },
+    "lilweid": {
+      "weekdays": [],
+      "_weekdays_human": "unscheduled",
+      "_note": "The operator has not set a Lilweid longform cadence. Slots are assigned by hand with `scheduler assign --date`; nothing is invented here."
+    }
+  },
+  "shorts": {
+    "cadence": "daily",
+    "platforms": ["youtube", "tiktok", "instagram"],
+    "_note": "One short per day per queued platform, mapped in channels/<channel>/publish-plan.csv."
+  },
+  "reminders": {
+    "longform": {"time": "17:30", "kind": "longform"},
+    "shorts": {"time": "18:30", "kind": "shorts"}
+  },
+  "upload": {
+    "dir": "_upload",
+    "short_pattern": "{date}_{PLATFORM}_VIDEO-SHORT.mp4",
+    "longform_pattern": "{date}_{PLATFORM}_VIDEO-LONG.mp4",
+    "link_mode": "hardlink",
+    "_link_note": "os.link() makes a real NTFS hardlink on Windows and a POSIX hardlink elsewhere. Source and destination must sit on the same volume; a cross-volume attempt fails loudly rather than silently copying."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "_note": "Stickman longform cannot be scheduled until every item here is done. The channel canon marks this channel's identity provisional, and the operator's rule is that Friday publishing starts after the brand is built \u2014 so this file is the gate, not a checklist someone remembers.",
+  "channel": "stickman",
+  "items": {
+    "logo": {
+      "done": false,
+      "asset": null,
+      "note": null
+    },
+    "avatar": {
+      "done": false,
+      "asset": null,
+      "note": null
+    },
+    "name": {
+      "done": false,
+      "value": null,
+      "note": "canon section 4 (Naming) is still [TBD]"
+    },
+    "identifier_name": {
+      "done": false,
+      "value": null,
+      "note": "the @handle"
+    },
+    "locked_character": {
+      "done": true,
+      "asset": "channels/stickman/assets/character_ref.png",
+      "note": "Operator's mascot reference, 2026-08-29. This is the image the canon's verbatim prompt block in .claude/rules/stickman.md was locked from. The 3-panel character sheet (front / rear / face lock) is still [TBD] in canon section 5; this reference is the source it should be generated from, not a replacement for it."
+    },
+    "links": {
+      "done": false,
+      "value": null,
+      "note": null
+    },
+    "description": {
+      "done": false,
+      "value": null,
+      "note": null
+    }
+  },
+  "updated_utc": "2026-08-29T00:00:00Z"
+}

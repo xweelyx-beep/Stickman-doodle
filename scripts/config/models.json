@@ -1,0 +1,61 @@
+{
+  "_note": "Toolchain locks set by the operator on 2026-08-28. The pipeline does not choose these and does not change them; it reads them and refuses to run a paid stage against anything else. Claims about relative cost are recorded as the operator stated them, with verified:false, until someone checks them against live pricing and fills in verified_utc and source.",
+  "video": {
+    "engine": "kie",
+    "model": "seedance-1.5-pro",
+    "display_name": "Seedance 1.5 Pro",
+    "locked": true,
+    "locked_by": "operator",
+    "locked_utc": "2026-08-28T00:00:00Z",
+    "clip_seconds": 5,
+    "clips_per_block": 3,
+    "block_seconds": 15,
+    "aspect_long_form": "16:9",
+    "aspect_shorts": "9:16",
+    "prompt_standard": "4K",
+    "resolution_long_form": "3840x2160",
+    "resolution_shorts": "2160x3840",
+    "cost_claim": {
+      "claim": "lowest cost-per-second of the KIE video models",
+      "asserted_by": "operator",
+      "verified": false,
+      "verified_utc": null,
+      "source": null,
+      "_note": "Unverified. Do not repeat this as fact in any output until a source and date are filled in."
+    }
+  },
+  "image": {
+    "thumbnails": {
+      "engine": "kie",
+      "model": "flux",
+      "fallback_model": "gpt-image",
+      "locked": true,
+      "aspect": "16:9",
+      "resolution": "1280x720",
+      "variants": 3,
+      "overlay_text": "burned in post, never rendered by the model"
+    },
+    "stickman_art": {
+      "engine": "nano-banana-pro",
+      "model": "nano-banana-pro",
+      "locked": true,
+      "route": "manual",
+      "route_options": ["google-flow", "meta-ai"],
+      "_route_note": "Google Flow (Flow Queue - Auto Veo & Nano Banana extension) and Meta AI are browser surfaces with no API this pipeline can reach. The prompt builder emits a numbered, timestamped manual handoff sheet; a human runs the queue and drops the returned files into the episode's assets directory. Nothing here submits automatically.",
+      "filename_convention": "{episode_id}_{NN}_{YYYYMMDD-HHMM}_nbpro.png"
+    }
+  },
+  "voice": {
+    "engine": "elevenlabs",
+    "locked": true,
+    "api_key_env": "ELEVENLABS_API_KEY",
+    "_note": "Direct API. Voice ids live in elevenlabs.json; the key is read from the environment and never stored."
+  },
+  "paid_stages": ["voice", "video", "image"],
+  "credit_safeguard": {
+    "rule": "No paid generation fires without a human approving the exact credit estimate at gate 3.",
+    "enforced_by": "automation/core/state_manager.py gate 3",
+    "pipeline_submits": false,
+    "_note": "This repository contains no code that calls a paid endpoint. Gate 3 records what a human approved; the human runs the generation."
+  }
+}

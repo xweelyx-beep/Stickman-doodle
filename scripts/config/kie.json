@@ -1,0 +1,29 @@
+{
+  "_note": "KIE AI is a paid engine. Per CLAUDE.md the model choice and the spend are the operator's, never the pipeline's. Model fields are null until the operator sets them, and credit rates stay null until someone fills them in from KIE's live pricing with a source and a date. The prompt builder reports billable units either way; it never prints a made-up credit number.",
+  "api_key_env": "KIE_API_KEY",
+  "video": {
+    "model": null,
+    "candidates": ["veo", "kling", "seedance", "runway", "wan"],
+    "clip_seconds": 5,
+    "clips_per_block": 3,
+    "block_seconds": 15,
+    "aspect_long_form": "16:9",
+    "aspect_shorts": "9:16",
+    "resolution": "1080p"
+  },
+  "image": {
+    "model": null,
+    "candidates": ["gpt-image", "nano-banana", "seedream", "flux"],
+    "aspect_thumbnail": "16:9",
+    "resolution": "1280x720",
+    "variants": 3
+  },
+  "rates": {
+    "source": null,
+    "checked_utc": null,
+    "credits_per_video_second": null,
+    "credits_per_video_clip": null,
+    "credits_per_image": null,
+    "usd_per_credit": null
+  }
+}

@@ -1,0 +1,19 @@
+# Renders — commit the cue sheets and settings, not the output files
+*.mp3
+*.wav
+*.m4a
+*.aac
+*.mp4
+*.mov
+
+# Episode working directories, when they land here
+_upload/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

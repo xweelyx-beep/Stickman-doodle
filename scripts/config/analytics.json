@@ -1,0 +1,19 @@
+{
+  "_note": "Review thresholds. These are house defaults chosen to start a conversation, not measured benchmarks for these channels — every one carries source:null until someone replaces it with a figure read off YouTube Studio. The analyzer prints the source beside every verdict so a house default is never mistaken for evidence.",
+  "thresholds": {
+    "ctr_percent": {"floor": 4.0, "target": 6.0, "source": null},
+    "retention_30s_percent": {"floor": 60.0, "target": 75.0, "source": null},
+    "avd_ratio": {"floor": 0.30, "target": 0.45, "source": null,
+                  "_note": "average view duration divided by runtime"}
+  },
+  "pacing": {
+    "_note": "Seconds per scene, parsed from each channel canon's verified-episode table. The analyzer re-derives these at run time and warns if this file has drifted from the canon.",
+    "known-unknowns": 9.33,
+    "lilweid": 6.17,
+    "stickman": null
+  },
+  "feedback": {
+    "min_mentions_to_flag": 2,
+    "_note": "A term must recur before it is reported. One comment is an anecdote."
+  }
+}

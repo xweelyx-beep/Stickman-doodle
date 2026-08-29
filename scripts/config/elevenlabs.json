@@ -1,0 +1,52 @@
+{
+  "_note": "Voice IDs belong to the operator's ElevenLabs account and are not guessable. The pipeline refuses to emit a voice_id it was not given. The API key is read from the environment variable named below and is never written to this file, to an episode file, or to git.",
+  "api_key_env": "ELEVENLABS_API_KEY",
+  "model_id": "eleven_multilingual_v2",
+  "output_format": "mp3_44100_128",
+  "ssml": {
+    "sentence_break": "0.35s",
+    "clause_break": "0.6s",
+    "beat_break": "1.0s",
+    "_note": "Emitted as <break time=\"...\" /> tags. Confirm break-tag support for whichever model_id is set above before a full render."
+  },
+  "defaults": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.0,
+    "use_speaker_boost": true,
+    "_note": "Starting points to tune by ear on a 30-second sample, not measured optima."
+  },
+  "channels": {
+    "lilweid": {
+      "voice_id": null,
+      "voice_name": null,
+      "stability": 0.6,
+      "similarity_boost": 0.8,
+      "style": 0.15,
+      "_rationale": "Canon voice lock: declarative and grave, short sentences that land hard. Higher stability for an even, unwavering read.",
+      "locked": false,
+      "status": "no voice assigned"
+    },
+    "known-unknowns": {
+      "voice_id": "8JVbfL6oEdmuxKn5DK2C",
+      "voice_name": "Johnny Kid",
+      "stability": 0.65,
+      "similarity_boost": 0.75,
+      "style": 0.0,
+      "_rationale": "Operator-assigned 2026-08-29. Matches the canon voice lock: precise, unhurried, never hypes. High stability and zero style exaggeration keep the read even; authority comes from precision, not delivery.",
+      "voice_description": "Young British male, serious and calm.",
+      "locked": true
+    },
+    "stickman": {
+      "voice_id": "Xn6GqAFT1vo7SexgOVmn",
+      "voice_name": "Eva",
+      "stability": 0.45,
+      "similarity_boost": 0.75,
+      "style": 0.3,
+      "_rationale": "The operator states no Stickman voice is decided yet and prefers Eva, so this is a candidate rather than a lock. It is distinct from Johnny Kid, which satisfies the canon rule that each channel has its own narrator and they must not converge. Note that picking a voice id does not unblock canon section 7 (Voice), which still needs register, pace and sentence length read off the finished episodes. These stability settings are placeholders until tuned by ear on a 30-second Eva sample.",
+      "voice_description": "Naturally rich female voice, slightly deep \u2014 confident, soothing, effortlessly engaging.",
+      "locked": false,
+      "status": "operator preference, not final"
+    }
+  }
+}
