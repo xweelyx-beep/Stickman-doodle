@@ -1,50 +1,82 @@
-# scripts/ — pinned snapshot, not a fork
+# scripts/ — the standalone pipeline
 
-A byte-identical copy of `automation/` from xweelyx-beep/Business @ `06de1d8`:
-`run.py`, `core/*.py`, `config/*.json`. 4,284 lines of stdlib-only Python 3.
+Forked from `automation/` in xweelyx-beep/Business @ `06de1d8` and decoupled on
+2026-08-29. Stdlib-only Python 3, no third-party dependencies, no network calls.
 
-**Business is the source of truth.** This snapshot exists so the generation code
-that produced this channel's prompts travels with the assets. Fix bugs in
-Business and re-copy; edits made here will drift and be lost.
+**This is now a fork, deliberately.** It was a read-only snapshot for one
+commit; the decoupling made it independent. The two copies will diverge, and
+that is the intent — Business keeps the three-channel tree, this keeps
+Stickman. A fix that matters to both has to be applied twice. `core/paths.py`
+is the whole of the divergence in layout terms, so a port is usually a matter
+of leaving that file alone.
 
-## Why it is a snapshot rather than a working copy
+Behaviour is otherwise unchanged: `core/canon.py --json` returns byte-identical
+output to the Business copy for this channel, checked against it.
 
-The pipeline is shared across three channels. `core/canon.py` hard-codes
-`CHANNELS = ("lilweid", "known-unknowns", "stickman")`, and `repo_root()` walks
-up looking for a `.claude/rules/` directory, then expects
-`channels/<channel>/brand.json` beside it. Run from this repository it exits
-with:
+## Standalone as of 2026-08-29
+
+It no longer needs the Business checkout. The layout is declared in
+`channel.json` at the repository root and resolved by `core/paths.py`, which is
+the only module that builds a repository path:
+
+| Was, in Business | Is, here | Declared as |
+|---|---|---|
+| `.claude/rules/stickman.md` | `docs/channel-bible.md` | `layout.canon` |
+| `automation/config/*.json` | `scripts/config/*.json` | `layout.config` |
+| `automation/memory/` | `memory/` | `layout.memory` |
+| `channels/stickman/episodes/` | `episodes/` | `layout.episodes` |
+| `channels/stickman/brand.json` | `references/brand.json` | `layout.brand` |
+
+Root resolution, in order: an explicit `--root`, then `$STICKMAN_REPO_ROOT`,
+then a walk up from the module for `channel.json`. No hard-coded fallback — a
+missing marker fails loudly rather than reading the wrong tree:
 
 ```
-$ python3 scripts/core/canon.py --channel stickman
-error: no repository root found above /home/user/Stickman-doodle/scripts/core/canon.py; run this from inside the Business repo
+$ cd / && python3 -c "import sys; sys.path.insert(0,'scripts/core'); import paths; paths.find_root('/etc')"
+error: no channel.json found at or above /etc; this is not a Stickman-doodle checkout. Run from inside one, pass --root, or set $STICKMAN_REPO_ROOT.
 ```
 
-Making it run here means recreating the Business layout — at which point there
-are two copies of a three-channel pipeline drifting apart. Run it from Business
-instead; this copy is the record.
+Moving a directory means editing `channel.json`, not the Python. There is a test
+that proves it (`tests/test_standalone.py::test_moving_a_directory_needs_no_python_change`).
 
-## Running it, from the Business checkout
+## Running it
 
 ```bash
-python automation/run.py init    --channel stickman --topic "..." --keyword "..." --runtime 8:30
-python automation/run.py approve --channel stickman --episode <id> --gate 1 --title 1 --by you
-python automation/run.py script  --channel stickman --episode <id>
-python automation/run.py approve --channel stickman --episode <id> --gate 2 --by you
-python automation/run.py prompts --channel stickman --episode <id>
-python automation/run.py approve --channel stickman --episode <id> --gate 3 --credits <n> --by you
-python automation/run.py package --channel stickman --episode <id> --by you
+python3 scripts/run.py init    --channel stickman --topic "..." --keyword "..." --runtime 8:30
+python3 scripts/run.py approve --channel stickman --episode <id> --gate 1 --title 1 --by you
+python3 scripts/run.py script  --channel stickman --episode <id>
+python3 scripts/run.py approve --channel stickman --episode <id> --gate 2 --by you
+python3 scripts/run.py prompts --channel stickman --episode <id>
+python3 scripts/run.py approve --channel stickman --episode <id> --gate 3 --credits <n> --by you
+python3 scripts/run.py package --channel stickman --episode <id> --by you
 ```
 
-Full command reference: `docs/pipeline-commands.md`. The reasoning behind the
-gates: `docs/pipeline-conventions.md`.
+Works from any working directory, and from a checkout moved anywhere on disk.
 
-## Two things to know before running it for Stickman
+## Tests
 
-1. **`schedule` will refuse.** `config/schedule.json` sets
+```bash
+python3 scripts/tests/test_standalone.py
+```
+
+17 tests, stdlib `unittest`. They assert the layout is declared rather than
+hard-coded, that root resolution works from any cwd and fails loudly outside a
+checkout, that no module builds a Business path, that the brand gate reads a
+file that is really on disk, and that the blocked canon still refuses to
+generate. The Business suite (`automation/tests/test_pipeline.py`, 648 lines)
+was not portable: it asserts the three-channel tree.
+
+## Three things to know before running it for Stickman
+
+1. **`init` and `script` will refuse by default.** The canon marks the beat
+   architecture, the voice lock and the pace `[BLOCKED]`, so the engines stop
+   rather than guess. `--allow-provisional-architecture`, `--voice-lock` and
+   `--seconds-per-scene` override each one explicitly, and what they produce is
+   a working draft, not canon.
+2. **`schedule` will refuse.** `config/schedule.json` sets
    `requires_brand_ready: true`, and 6 of 7 items in `references/brand.json` are
    still `false`. That is the gate working, not a bug.
-2. **`analyze` has no pace baseline.** `config/analytics.json` carries
+3. **`analyze` has no pace baseline.** `config/analytics.json` carries
    `pacing.stickman: null` because no episode has been analysed.
 
 ## Contents
@@ -61,7 +93,10 @@ gates: `docs/pipeline-conventions.md`.
 | `core/analyzer.py` | 344 | metrics → pacing fixes |
 | `core/memory.py` | 277 | session checkpoints, topic dedup |
 | `core/wizard.py` | 261 | the guided numbered flow |
+| `core/paths.py` | 187 | **new** — the layout authority; the only module that builds a repo path |
+| `tests/test_standalone.py` | 177 | **new** — 17 tests guarding the decoupling |
 | `config/*.json` | — | the toolchain locks — see `docs/toolchain.md` |
 
-`automation/tests/test_pipeline.py` (648 lines) was **not** copied: it asserts
-against the three-channel Business layout and cannot pass here.
+`automation/tests/test_pipeline.py` (648 lines) was not copied: it asserts
+against the three-channel Business layout. `tests/test_standalone.py` replaces
+it for the layout concerns that actually apply here.

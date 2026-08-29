@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Publishing cadence, the upload queue, and the two daily reminders.
 
-Cadence comes from automation/config/schedule.json: Known Unknowns longform on
+Cadence comes from scripts/config/schedule.json: Known Unknowns longform on
 Tuesday and Friday, Stickman longform on Friday, shorts daily. Lilweid has no
 operator-set cadence and therefore has none here — an unscheduled channel is
 reported as unscheduled rather than given an invented slot.
 
-Stickman longform is gated on channels/stickman/brand.json. The operator's rule
+Stickman longform is gated on references/brand.json. The operator's rule
 is that Friday publishing starts once the logo, avatar, name, handle, locked
 character, links and description exist, so the scheduler refuses a Stickman
 longform slot until that file says they do.
@@ -28,6 +28,10 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from canon import CHANNELS, load_canon, repo_root  # noqa: E402
+try:
+    import paths
+except ImportError:  # imported as a package from run.py
+    from . import paths
 from state_manager import EpisodeState, channel_dir, utcnow, write_atomic  # noqa: E402
 
 WEEKDAY_NAMES = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
@@ -41,7 +45,7 @@ PLAN_COLUMNS = ("episode_id", "channel", "state", "title", "topic", "runtime_tar
 
 
 def load_schedule(root):
-    path = os.path.join(root, "automation", "config", "schedule.json")
+    path = paths.config_path("schedule.json", root)
     if not os.path.isfile(path):
         raise SystemExit(f"error: missing {path}; the schedule config is part of the pipeline")
     with open(path, "r", encoding="utf-8") as fh:
@@ -62,7 +66,7 @@ def brand_status(root, channel):
     disk. Marking `locked_character` done while its reference image is missing
     would let the gate report ready on a promise, which is the one thing a gate
     exists to stop."""
-    path = os.path.join(channel_dir(root, channel), "brand.json")
+    path = paths.brand_path(root, channel)
     if not os.path.isfile(path):
         return None
     with open(path, "r", encoding="utf-8") as fh:
@@ -181,8 +185,9 @@ def caption_metadata(root, channel, episode_id):
         "tags_chars": tags.get("field_chars"),
         "hashtags": ["#" + t.replace(" ", "") for t in tags.get("head_terms", [])[:3]],
         "state": state.state,
-        "metadata_file": os.path.join("channels", channel, "episodes", episode_id,
-                                      "05_metadata.md"),
+        "metadata_file": os.path.relpath(
+            os.path.join(paths.episode_dir(root, channel, episode_id), "05_metadata.md"),
+            root),
     }
 
 
@@ -324,7 +329,7 @@ def install_entries(root, schedule=None):
     out = []
     for kind, cfg in sorted(schedule["reminders"].items()):
         hh, mm = cfg["time"].split(":")
-        cmd = ('python automation/run.py remind --kind %s' % cfg["kind"])
+        cmd = ('python scripts/run.py remind --kind %s' % cfg["kind"])
         out.append({
             "kind": cfg["kind"],
             "time": cfg["time"],

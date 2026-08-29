@@ -24,6 +24,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import memory  # noqa: E402
 from canon import CHANNELS, load_canon, repo_root  # noqa: E402
+try:
+    import paths
+except ImportError:  # imported as a package from run.py
+    from . import paths
 from seo_engine import build_chapters, build_keywords, parse_duration, timestamp  # noqa: E402
 
 DEFAULT_WPM = 150  # narration rate assumption; override with --wpm after measuring a real read
@@ -99,7 +103,7 @@ def resolve_signoff(canon, requested=None, force=False):
 
 
 def load_voice_config(root, channel):
-    path = os.path.join(root, "automation", "config", "elevenlabs.json")
+    path = paths.config_path("elevenlabs.json", root)
     if not os.path.isfile(path):
         raise SystemExit(f"error: missing {path}; the ElevenLabs config is part of the pipeline")
     with open(path, "r", encoding="utf-8") as fh:

@@ -1,0 +1,22 @@
+{
+  "_note": "Repository identity and layout map. This file is the marker paths.py walks up to find, and the single place the on-disk layout is declared. Moving a directory means editing this file, not the Python. Written 2026-08-29 when the pipeline was decoupled from the Business repo.",
+  "channel": "stickman",
+  "display_name": "Stickman",
+  "standalone": true,
+  "migrated_from": {
+    "repo": "xweelyx-beep/Business",
+    "commit": "06de1d8",
+    "layout": "multi-channel: channels/<channel>/, canon in .claude/rules/<channel>.md, config in automation/config/"
+  },
+  "layout": {
+    "canon": "docs/channel-bible.md",
+    "config": "scripts/config",
+    "memory": "memory",
+    "episodes": "episodes",
+    "prompts": "prompts",
+    "references": "references",
+    "audio": "audio",
+    "docs": "docs",
+    "brand": "references/brand.json"
+  }
+}

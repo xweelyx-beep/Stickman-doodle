@@ -20,6 +20,10 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from canon import CHANNELS, load_canon, repo_root  # noqa: E402
+try:
+    import paths
+except ImportError:  # imported as a package from run.py
+    from . import paths
 
 YOUTUBE_TITLE_MAX = 100        # hard limit on the title field
 YOUTUBE_TITLE_VISIBLE = 60     # about where search results truncate

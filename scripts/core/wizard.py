@@ -3,9 +3,9 @@
 
 Two numbered questions — which channel, then what to do — and every answer
 resolves to the exact command to run next. It holds no state of its own: the
-channel list comes from the canon, the resume position comes from
-automation/memory/session_state.json, and the gate position comes from the
-episode's state.json.
+channel list comes from channel.json, the resume position comes from the memory
+directory's session_state.json, and the gate position comes from the episode's
+state.json.
 
 `--json` emits the menu and the resolved command so an agent can render the same
 flow it would show a human at a terminal, and neither can drift from the other.
@@ -20,13 +20,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import memory  # noqa: E402
 import scheduler  # noqa: E402
+import paths  # noqa: E402
 from canon import CHANNELS, load_canon, repo_root  # noqa: E402
 from state_manager import GATES, EpisodeState  # noqa: E402
 
+# One channel in this repository. The other two stayed in xweelyx-beep/Business
+# along with the multi-channel tree; the menu is built from channel.json so it
+# cannot drift from what the repository actually holds.
 CHANNEL_MENU = (
-    ("1", "known-unknowns", "Known Unknowns", "long-form science, 8–11 min"),
-    ("2", "lilweid", "Lilweid", "cinematic self-mastery and money, 1:30–3:30"),
-    ("3", "stickman", "Stickman", "2D explainer; canon partly blocked"),
+    ("1", "stickman", "Stickman", "2D explainer; canon partly blocked"),
 )
 
 ACTION_MENU = (
@@ -82,7 +84,7 @@ def action_menu(root, channel):
 
 
 def list_episodes(root, channel):
-    base = os.path.join(root, "channels", channel, "episodes")
+    base = paths.episodes_dir(root, channel)
     if not os.path.isdir(base):
         return []
     out = []
@@ -97,7 +99,7 @@ def list_episodes(root, channel):
 
 def next_command(root, channel, action, episode_id=None, topic=None):
     """The literal command line for the chosen action — nothing paraphrased."""
-    base = "python automation/run.py"
+    base = "python scripts/run.py"
     if action == "new":
         dup = memory.check_topic(root, topic, channel) if topic else None
         if dup and dup["duplicate"]:

@@ -2,7 +2,7 @@
 """KIE AI video and thumbnail prompts, plus what the batch will cost.
 
 The house production method is not this module's invention. It is the
-operator's, recovered in `.claude/rules/stickman.md` section 9 and restated in
+operator's, recovered in `docs/channel-bible.md` section 9 and restated in
 the `studio` skill, and it applies to every channel: 15-second blocks of three
 5-second clips, one camera motion per clip from a closed set, no block running
 the same motion three times, the style key appended identically to every scene,
@@ -11,7 +11,7 @@ submitted. All of it is enforced here rather than left to whoever is prompting.
 
 On money: KIE is paid, so this module never picks the model and never invents a
 rate. It counts billable units always, and converts them to credits only when
-`automation/config/kie.json` carries a rate with a source. Unset means the
+`scripts/config/kie.json` carries a rate with a source. Unset means the
 estimate comes back None, not a plausible number.
 """
 
@@ -25,6 +25,10 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from canon import CHANNELS, load_canon, repo_root  # noqa: E402
+try:
+    import paths
+except ImportError:  # imported as a package from run.py
+    from . import paths
 
 # Closed set, from the house method. A static shot is a failure.
 CAMERA_MOTIONS = ("slow push-in", "slow pull-back", "slow tilt-up", "gentle drift")
@@ -63,7 +67,7 @@ THUMBNAIL_CONCEPTS = (
 
 def load_models(root):
     """The operator's toolchain locks. The pipeline reads them; it never sets them."""
-    path = os.path.join(root, "automation", "config", "models.json")
+    path = paths.config_path("models.json", root)
     if not os.path.isfile(path):
         raise SystemExit(f"error: missing {path}; the toolchain lock is part of the pipeline")
     with open(path, "r", encoding="utf-8") as fh:
@@ -85,7 +89,7 @@ def enforce_video_lock(models, requested):
 
 
 def load_kie_config(root):
-    path = os.path.join(root, "automation", "config", "kie.json")
+    path = paths.config_path("kie.json", root)
     if not os.path.isfile(path):
         raise SystemExit(f"error: missing {path}; the KIE config is part of the pipeline")
     with open(path, "r", encoding="utf-8") as fh:
@@ -251,9 +255,9 @@ def estimate_cost(cfg, scene_count, clip_seconds, thumbnail_count, variants):
         "image_credits": image_credits,
         "total_credits": total,
         "total_usd": (total * usd) if (total is not None and usd is not None) else None,
-        "note": ("Credits computed from the rate card in automation/config/kie.json."
+        "note": ("Credits computed from the rate card in scripts/config/kie.json."
                  if total is not None else
-                 "No credit figure: automation/config/kie.json carries no sourced rate. "
+                 "No credit figure: scripts/config/kie.json carries no sourced rate. "
                  "Billable units above are exact; fill the rate card in before gate 3 or "
                  "state the approved spend yourself with `approve --gate 3 --credits N`."),
     }
