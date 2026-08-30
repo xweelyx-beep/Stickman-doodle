@@ -121,10 +121,17 @@ the scene analysis and replace every `[BLOCKED]` marker with a verified lock.
   hands the viewer nothing to do has drifted toward Lilweid.
 - **Videos get analysed, not guessed.**
 
-## Two folders carry no assets, on purpose
+## Episode assets
 
-`prompts/` and `audio/` hold only a README each, because no such asset exists to migrate. Verified
-across all 355 unique file paths in every commit on all 4 branches of Business:
-zero `.txt` files, zero audio files, zero episode prompt files, ever. Both
-folders' READMEs record the search and what would fill them. Nothing was
-reconstructed to make the tree look complete.
+One episode is partially in the repository: **Why You Check Your Phone**, 11:22.
+
+| | |
+|---|---|
+| Image prompts | 54 of ~157 frames, `[00:00]`–`[03:19]` — `prompts/` |
+| Revision pass | 20.4% → **46.3%** character presence, 14 frames changed — `prompts/revision_changelog.md` |
+| Music bed | 7 movements, full 11:22 — `audio/music_bed_cues.md` |
+
+The prompt file is partial because the source paste was truncated mid-frame at
+`[03:22]`. The missing ~100 frames were **not** generated — see
+`prompts/README.md` for exactly what is absent and why filling it in from a beat
+summary would contradict footage that is already cut.

@@ -2,8 +2,8 @@
 
 Per-episode image and video prompt files.
 
-**This folder is empty of episode prompts right now.** That is not an oversight
-in the migration — see below.
+Holds one partially-supplied episode. See "What is here" below for counts and
+"What is still missing" for what has not arrived.
 
 ## Naming
 
@@ -33,26 +33,41 @@ names fixed in `scripts/core/state_manager.py`:
 Copy the ones worth keeping into this folder under the naming above, or leave
 them in the episode directory — either is fine, but pick one and stay with it.
 
-## Why there are no prompt files here yet
+## What is here
 
-Searched exhaustively before writing this: **355 unique file paths across every
-commit on all 4 branches of xweelyx-beep/Business.** Zero `.txt` files have ever
-existed in that repository, and no file matching `image_prompts_*` or
-`*_prompts_*` has ever been committed to it. `git grep` over every reachable
-commit for the phrase "check your phone" returns nothing.
+| File | Frames | Range | Character presence |
+|---|---|---|---|
+| `image_prompts_why_you_check_your_phone.txt` | 54 | `[00:00]`–`[03:19]` | 20.4% (11/54) |
+| `image_prompts_why_you_check_your_phone_v2.txt` | 54 | `[00:00]`–`[03:19]` | **46.3% (25/54)** |
+| `revision_changelog.md` | — | — | the pass between them |
 
-The two episodes named in the canon —
+**v2 is the one to generate from.** The base file is kept unmodified so the
+revision stays diffable — 14 frames changed, 40 byte-identical.
 
-| # | Title | State |
-|---|---|---|
-| 1 | Can't stop eating Sugar | Finished, unpublished |
-| 2 | Can't stop checking your phone | Nearly done |
+## What is still missing
 
-— were produced before this repository existed. The canon states plainly that
-they "live on a local Windows drive this environment cannot reach." Their prompt
-files are almost certainly on that drive.
+The supplied file is **partial**. The source paste ends mid-sentence inside
+`[03:22]`:
 
-**To fill this folder:** copy the episode prompt files off the Windows drive and
-commit them here. Nothing is reconstructed or regenerated in the meantime —
-inventing prompts for footage that already exists would contradict the real
-episodes, which is the specific failure the canon warns against.
+```
+[03:22] 2D cartoon animation in modern YouTube explainer style, bold clean
+black outlines, cel-shaded flat colors with soft ambient shading and gentle
+```
+
+That truncated entry was not saved. Everything from `[03:22]` to `[11:22]` is
+absent — roughly 100 frames of the stated 157, covering:
+
+| Segment | Range |
+|---|---|
+| Fiorillo, Tobler & 50% uncertainty | `[03:22]`–`[05:37]` |
+| Smartphone mechanism & the casino floor | `[05:38]`–`[06:44]` |
+| Friction, Harris & Gloria Mark's attention data | `[06:45]`–`[09:48]` |
+| Reward gap & savannah evolution | `[09:49]`–`[10:39]` |
+| Awareness, resolution & close | `[10:40]`–`[11:22]` |
+
+**None of it was generated.** A beat summary is not a prompt, and inventing ~100
+frames for an episode that is already cut would contradict the footage — the
+failure the channel bible names explicitly. Paste the rest and the same revision
+pass runs on it; the method and the measured baseline are in
+`revision_changelog.md`.
+
