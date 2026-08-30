@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read a channel's canon out of .claude/rules/<channel>.md.
+"""Read the channel's canon out of the path declared in channel.json.
 
 The canon files are the single source of truth for voice, pace, architecture and
 visual system. Nothing in this package hard-codes a channel fact: every value
@@ -14,7 +14,14 @@ import json
 import os
 import re
 
-CHANNELS = ("lilweid", "known-unknowns", "stickman")
+try:
+    import paths
+except ImportError:  # imported as a package from run.py
+    from . import paths
+
+# Resolved from channel.json rather than hard-coded, so this module carries no
+# knowledge of which channel the repository holds.
+CHANNELS = paths.channels()
 
 # Reference-table columns the pace parser needs. Both verified canons carry a
 # "| Ref | Subject | Runtime | Scenes | Pace |" table; stickman's episode table
@@ -25,18 +32,8 @@ _MMSS = re.compile(r"^(\d+):(\d{2})$")
 
 
 def repo_root(start=None):
-    """Walk up until a directory holding .claude/rules is found."""
-    here = os.path.abspath(start or os.path.dirname(os.path.abspath(__file__)))
-    while True:
-        if os.path.isdir(os.path.join(here, ".claude", "rules")):
-            return here
-        parent = os.path.dirname(here)
-        if parent == here:
-            raise SystemExit(
-                "error: no repository root found above "
-                f"{start or __file__}; run this from inside the Business repo"
-            )
-        here = parent
+    """Repository root. Delegates to paths.py, the layout authority."""
+    return paths.find_root(start)
 
 
 def _strip_frontmatter(text):
@@ -360,13 +357,10 @@ class Canon(object):
 
 def load_canon(channel, root=None):
     root = root or repo_root()
-    if channel not in CHANNELS:
-        raise SystemExit(
-            f"error: unknown channel {channel!r}; expected one of {', '.join(CHANNELS)}"
-        )
-    path = os.path.join(root, ".claude", "rules", channel + ".md")
+    paths.check_channel(channel, root)
+    path = paths.canon_path(channel, root)
     if not os.path.isfile(path):
-        raise SystemExit(f"error: canon not found at {path}; the channel rule file is missing")
+        raise SystemExit(f"error: canon not found at {path}; the channel bible is missing")
     with open(path, "r", encoding="utf-8") as fh:
         return Canon(channel, path, _strip_frontmatter(fh.read()))
 

@@ -23,6 +23,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import memory  # noqa: E402
 from canon import CHANNELS, load_canon, repo_root  # noqa: E402
+try:
+    import paths
+except ImportError:  # imported as a package from run.py
+    from . import paths
 from seo_engine import timestamp  # noqa: E402
 from state_manager import EPISODE_FILES, EpisodeState, utcnow, write_atomic  # noqa: E402
 
@@ -36,7 +40,7 @@ STOPWORDS = {
 
 
 def load_thresholds(root):
-    path = os.path.join(root, "automation", "config", "analytics.json")
+    path = paths.config_path("analytics.json", root)
     if not os.path.isfile(path):
         raise SystemExit(f"error: missing {path}; the analytics config is part of the pipeline")
     with open(path, "r", encoding="utf-8") as fh:
@@ -273,7 +277,7 @@ def render_markdown(p):
     A("")
     if not p["existing_learnings"]:
         A("None recorded yet. Approve a fix above with "
-          "`python automation/run.py analyze ... --record-learning <n>`.")
+          "`python scripts/run.py analyze ... --record-learning <n>`.")
     else:
         A("| ID | Finding | Fix | Applied |")
         A("|---|---|---|---|")
@@ -285,8 +289,9 @@ def render_markdown(p):
 
 
 def write_audit(root, payload):
-    path = os.path.join(root, "channels", payload["channel"], "episodes",
-                        payload["episode_id"], "06_performance_audit.md")
+    path = os.path.join(paths.episode_dir(root, payload["channel"],
+                                          payload["episode_id"]),
+                        "06_performance_audit.md")
     write_atomic(path, render_markdown(payload))
     return path
 

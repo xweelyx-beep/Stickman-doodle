@@ -63,7 +63,7 @@ def checkpoint_and_warn(root, state, stage):
     message = (
         "state.json is %.0f KB. Everything needed to continue is on disk and the position "
         "is checkpointed, so finish this session and open a fresh one, then run:\n"
-        "    python automation/run.py status --channel %s --episode %s"
+        "    python scripts/run.py status --channel %s --episode %s"
         % (size_kb, state.data["channel"], state.data["episode_id"]))
     print("")
     banner(["TOKEN OVERFLOW PROTECTION"] + message.split("\n"))
@@ -85,7 +85,7 @@ def cmd_init(args, root):
     if dup["duplicate"] and not args.allow_duplicate:
         prior = dup["exact_matches"][0]
         raise SystemExit(
-            "error: this topic is already in automation/memory/topic_history.json — "
+            "error: this topic is already in the memory store (memory/topic_history.json) — "
             "%s on %s (%s). Pick a different angle, or pass --allow-duplicate to make it "
             "anyway." % (prior.get("episode_id") or "recorded", prior.get("channel"),
                          prior.get("recorded_utc")))
@@ -137,7 +137,7 @@ def cmd_init(args, root):
     banner([
         "GATE 1 — TITLE & HOOK. Nothing else runs until a person approves.",
         "Read %s, then:" % EPISODE_FILES["seo"],
-        "  python automation/run.py approve --channel %s \\" % args.channel,
+        "  python scripts/run.py approve --channel %s \\" % args.channel,
         "      --episode %s --gate 1 --title <1|2|3> --by <you>" % episode_id,
     ])
     return 0
@@ -192,7 +192,7 @@ def cmd_script(args, root):
     banner([
         "GATE 2 — SCRIPT. Fill every «FILL» and «CITE» marker by hand,",
         "then approve. Gate 2 refuses while markers remain.",
-        "  python automation/run.py approve --channel %s \\" % args.channel,
+        "  python scripts/run.py approve --channel %s \\" % args.channel,
         "      --episode %s --gate 2 --by <you>" % args.episode,
     ])
     return 0
@@ -256,7 +256,7 @@ def cmd_prompts(args, root):
     banner([
         "GATE 3 — CREDIT SPEND. Nothing is submitted to KIE by this pipeline.",
         "State the spend you are approving; it is written to the approval log.",
-        "  python automation/run.py approve --channel %s \\" % args.channel,
+        "  python scripts/run.py approve --channel %s \\" % args.channel,
         "      --episode %s --gate 3 --credits <n> --by <you>" % args.episode,
     ])
     return 0
@@ -419,7 +419,7 @@ def cmd_package(args, root):
     print()
     banner([
         "Render the clips in KIE, cut the episode, upload it, then:",
-        "  python automation/run.py package --channel %s \\" % args.channel,
+        "  python scripts/run.py package --channel %s \\" % args.channel,
         "      --episode %s --publish --publish-date YYYY-MM-DD --by <you>" % args.episode,
     ])
     return 0
@@ -632,7 +632,7 @@ def cmd_checkpoint(args, root):
 
 def build_parser():
     ap = argparse.ArgumentParser(
-        prog="automation/run.py",
+        prog="scripts/run.py",
         description="Faceless channel pipeline: init -> script -> prompts -> package, "
                     "with three human approval gates.")
     sub = ap.add_subparsers(dest="command", required=True)

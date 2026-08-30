@@ -17,3 +17,8 @@ __pycache__/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Episode working directories and pipeline state — real episodes get committed
+# deliberately; smoke-test runs do not.
+episodes/*/state.json
+memory/

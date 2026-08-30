@@ -2,9 +2,14 @@
 
 Music cues and voiceover assets, per episode.
 
-**This folder is empty.** No audio file of any kind has ever been committed to
-xweelyx-beep/Business — verified across all 355 unique paths in every commit on
-all 4 branches. No `.mp3`, `.wav`, `.m4a` or `.aac`, and no music-cue sheet.
+Holds `music_bed_cues.md` — the 7-movement mood map for *Why You Check Your
+Phone*, from the operator's spec. No audio **files** yet: none has ever been
+committed to xweelyx-beep/Business either, verified across all 355 unique paths
+in every commit on all 4 branches.
+
+| File | What it is |
+|---|---|
+| `music_bed_cues.md` | 7 movements across the 11:22 timeline, contiguous, mood + direction per movement |
 
 ## Layout when files arrive
 

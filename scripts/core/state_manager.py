@@ -18,8 +18,10 @@ import tempfile
 
 try:
     from canon import CHANNELS, repo_root
+    import paths
 except ImportError:  # imported as a package from run.py
     from .canon import CHANNELS, repo_root
+    from . import paths
 
 STATES = ("DRAFT", "SCRIPT_APPROVED", "PROMPTS_STAGED", "RENDERED", "PUBLISHED")
 
@@ -73,13 +75,11 @@ def utcnow():
 
 
 def channel_dir(root, channel):
-    if channel not in CHANNELS:
-        raise SystemExit(f"error: unknown channel {channel!r}; expected one of {', '.join(CHANNELS)}")
-    return os.path.join(root, "channels", channel)
+    return paths.channel_dir(root, channel)
 
 
 def episode_dir(root, channel, episode_id):
-    return os.path.join(channel_dir(root, channel), "episodes", episode_id)
+    return paths.episode_dir(root, channel, episode_id)
 
 
 def write_atomic(path, text):
@@ -150,7 +150,7 @@ class EpisodeState(object):
         if not os.path.isfile(path):
             raise SystemExit(
                 f"error: no episode at {path}; run "
-                f"`python automation/run.py init --channel {channel} --topic \"...\"` first"
+                f"`python scripts/run.py init --channel {channel} --topic \"...\"` first"
             )
         with open(path, "r", encoding="utf-8") as fh:
             return cls(path, json.load(fh))
@@ -194,7 +194,7 @@ class EpisodeState(object):
                 raise SystemExit(
                     f"error: gate {key} ({g['label']}) is {g['status']}, so `{command}` is locked. "
                     f"Review {EPISODE_FILES['seo'] if key == '1' else EPISODE_FILES['script'] if key == '2' else EPISODE_FILES['video_prompts']} "
-                    f"in {self.dir}, then run `python automation/run.py approve "
+                    f"in {self.dir}, then run `python scripts/run.py approve "
                     f"--channel {self.data['channel']} --episode {self.data['episode_id']} --gate {key} ...`"
                 )
 
@@ -223,7 +223,7 @@ class EpisodeState(object):
         if gate["status"] == "not_opened":
             raise SystemExit(
                 f"error: gate {key} ({spec['label']}) has not been opened; run "
-                f"`python automation/run.py {spec['opened_by']} ...` first so there is "
+                f"`python scripts/run.py {spec['opened_by']} ...` first so there is "
                 "something to approve"
             )
         if gate["status"] == "approved":

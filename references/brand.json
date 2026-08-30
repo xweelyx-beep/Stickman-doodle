@@ -1,5 +1,5 @@
 {
-  "_note": "Stickman longform cannot be scheduled until every item here is done. The channel canon marks this channel's identity provisional, and the operator's rule is that Friday publishing starts after the brand is built \u2014 so this file is the gate, not a checklist someone remembers.",
+  "_note": "Stickman longform cannot be scheduled until every item here is done. The channel canon marks this channel's identity provisional, and the operator's rule is that Friday publishing starts after the brand is built — so this file is the gate, not a checklist someone remembers.",
   "channel": "stickman",
   "items": {
     "logo": {
@@ -24,8 +24,8 @@
     },
     "locked_character": {
       "done": true,
-      "asset": "channels/stickman/assets/character_ref.png",
-      "note": "Operator's mascot reference, 2026-08-29. This is the image the canon's verbatim prompt block in .claude/rules/stickman.md was locked from. The 3-panel character sheet (front / rear / face lock) is still [TBD] in canon section 5; this reference is the source it should be generated from, not a replacement for it."
+      "asset": "references/character_ref_body.png",
+      "note": "Operator's mascot reference, 2026-08-29. This is the image the canon's verbatim prompt block in docs/channel-bible.md was locked from. The 3-panel character sheet (front / rear / face lock) is still [TBD] in canon section 5; this reference is the source it should be generated from, not a replacement for it. Path repointed 2026-08-29 during the migration: it read channels/stickman/assets/character_ref.png, which Business commit 644bb18 deleted, leaving the gate checking a file that no longer existed."
     },
     "links": {
       "done": false,

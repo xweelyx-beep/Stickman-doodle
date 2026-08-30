@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cross-session memory: where we are, what we have already made, what we learned.
 
-Three stores under automation/memory/, all plain JSON so a human can read and
+Three stores under the memory directory, all plain JSON so a human can read and
 correct them:
 
   session_state.json  active channel, episode and stage — survives a session ending
@@ -23,6 +23,10 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from canon import CHANNELS, repo_root  # noqa: E402
+try:
+    import paths
+except ImportError:  # imported as a package from run.py
+    from . import paths
 from state_manager import utcnow, write_atomic  # noqa: E402
 
 PLATFORMS = ("youtube", "tiktok", "instagram")
@@ -47,9 +51,7 @@ STOPWORDS = {
 
 
 def memory_dir(root):
-    path = os.path.join(root, "automation", "memory")
-    os.makedirs(path, exist_ok=True)
-    return path
+    return paths.memory_dir(root)
 
 
 def load(root, store):
