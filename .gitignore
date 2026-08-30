@@ -22,3 +22,8 @@ desktop.ini
 # deliberately; smoke-test runs do not.
 episodes/*/state.json
 memory/
+
+# Generated frames. The manifest is queue state, the PNGs are renders —
+# neither belongs in git. `generate_frames.py status` rebuilds progress from
+# whatever is on disk.
+output/

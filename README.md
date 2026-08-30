@@ -44,6 +44,7 @@ scripts/      pinned snapshot of the generation pipeline        — 16 files
 | Which models and voices are locked? | [`docs/toolchain.md`](docs/toolchain.md) |
 | How do I run an episode? | [`docs/pipeline-commands.md`](docs/pipeline-commands.md) |
 | Why are those gates there? | [`docs/pipeline-conventions.md`](docs/pipeline-conventions.md) |
+| How do I generate the frames? | [`docs/generating-frames.md`](docs/generating-frames.md) |
 | Where did all this come from? | [`docs/MIGRATION.md`](docs/MIGRATION.md) |
 
 ## Workflow
@@ -120,6 +121,27 @@ the scene analysis and replace every `[BLOCKED]` marker with a verified lock.
 - **Actionable means actionable.** An episode that explains a mechanism but
   hands the viewer nothing to do has drifted toward Lilweid.
 - **Videos get analysed, not guessed.**
+
+## Generating the frames
+
+```bash
+python3 scripts/generate_frames.py plan     # validate and show the batch plan
+python3 scripts/generate_frames.py next     # hand out the next 3 prompts
+python3 scripts/generate_frames.py verify   # record what landed in output/frames/
+python3 scripts/generate_frames.py status   # progress
+```
+
+The driver **submits nothing and makes no network call** — `models.json` locks
+Stickman art to Nano Banana Pro on `route: "manual"` through Google Flow or
+Meta AI, browser surfaces with no API, and `credit_safeguard.pipeline_submits`
+is `false`. What it automates is the queue: validation, batching, verification,
+durable progress, and resume.
+
+It hands out **three frames at a time and halts**, because
+[`references/style-rules.md`](references/style-rules.md) §1 caps concurrency at
+three and calls bulk generation a failure. `--batch-size` above 3 is refused.
+
+Full detail: [`docs/generating-frames.md`](docs/generating-frames.md).
 
 ## Episode assets
 

@@ -56,10 +56,11 @@ Works from any working directory, and from a checkout moved anywhere on disk.
 ## Tests
 
 ```bash
-python3 scripts/tests/test_standalone.py
+python3 scripts/tests/test_standalone.py       # 17 tests — the decoupling
+python3 scripts/tests/test_generate_frames.py  # 20 tests — the queue driver
 ```
 
-17 tests, stdlib `unittest`. They assert the layout is declared rather than
+Stdlib `unittest`, 37 tests total. They assert the layout is declared rather than
 hard-coded, that root resolution works from any cwd and fails loudly outside a
 checkout, that no module builds a Business path, that the brand gate reads a
 file that is really on disk, and that the blocked canon still refuses to
@@ -94,7 +95,9 @@ was not portable: it asserts the three-channel tree.
 | `core/memory.py` | 277 | session checkpoints, topic dedup |
 | `core/wizard.py` | 261 | the guided numbered flow |
 | `core/paths.py` | 187 | **new** — the layout authority; the only module that builds a repo path |
+| `generate_frames.py` | 394 | **new** — the 157-frame queue driver; submits nothing |
 | `tests/test_standalone.py` | 177 | **new** — 17 tests guarding the decoupling |
+| `tests/test_generate_frames.py` | 240 | **new** — 20 tests guarding the queue driver |
 | `config/*.json` | — | the toolchain locks — see `docs/toolchain.md` |
 
 `automation/tests/test_pipeline.py` (648 lines) was not copied: it asserts
