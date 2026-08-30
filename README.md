@@ -131,7 +131,6 @@ the scene analysis and replace every `[BLOCKED]` marker with a verified lock.
 | Revision pass | 28.7% → **47.8%** character presence, 30 frames changed, 127 byte-identical |
 | Music bed | 7 movements across the full 11:22 — `audio/music_bed_cues.md` |
 
-One thing outstanding: frames 55–157 carry sequence markers (`[#055]`–`[#157]`)
-rather than timestamps, because the source arrived with those fields empty. No
-timings were invented, and supplying them is a find-and-replace on the marker
-column. See `prompts/README.md`.
+All 157 frames carry real `[MM:SS]` timestamps, `[00:00]`–`[11:22]`, strictly
+increasing and ending exactly on the runtime. Four of the five music-bed
+movement boundaries land on a frame exactly.

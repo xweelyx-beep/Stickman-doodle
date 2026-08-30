@@ -28,7 +28,7 @@ superseded by this figure now the file is complete.
 | | Frames | Base | v2 | Injected |
 |---|---|---|---|---|
 | First half — `[00:00]`–`[03:19]` | 54 | 11 (20.4%) | 25 (46.3%) | 14 |
-| Second half — `[#055]`–`[#157]` | 103 | 34 (33.0%) | 50 (48.5%) | 16 |
+| Second half — `[03:22]`–`[11:22]` | 103 | 34 (33.0%) | 50 (48.5%) | 16 |
 | **Total** | **157** | **45 (28.7%)** | **75 (47.8%)** | **30** |
 
 The second half already ran warmer than the first — 33% against 20.4% — because
@@ -51,13 +51,13 @@ Measured as runs of 3+ consecutive frames with no protagonist.
 
 | Run | Frames | Segment |
 |---|---|---|
-| `[#056]`–`[#059]` | 4 | dopamine diagrams, THE GAP |
-| `[#062]`–`[#076]` | **15** | Fiorillo/Tobler, 100/0/50, WANTING, the dial, Sapolsky |
-| `[#088]`–`[#098]` | **11** | Schüll, casino floor, slot cutaway, reels, near-miss |
-| `[#100]`–`[#104]` | 5 | NOT EXCITEMENT, melting clock, the wallet |
-| `[#106]`–`[#113]` | 8 | NO BOTTOM, SAME PULL, ENGINEERED DELAY, Harris |
-| `[#115]`–`[#122]` | 8 | Gloria Mark, the decline graph, 47 SECONDS |
-| `[#150]`–`[#153]` | 4 | THE LEVER, THE MAYBE, OLD CIRCUIT NEW LEVER |
+| `[03:23]`–`[03:33]` | 4 | dopamine diagrams, THE GAP |
+| `[03:49]`–`[04:49]` | **15** | Fiorillo/Tobler, 100/0/50, WANTING, the dial, Sapolsky |
+| `[05:26]`–`[06:17]` | **11** | Schüll, casino floor, slot cutaway, reels, near-miss |
+| `[06:28]`–`[06:44]` | 5 | NOT EXCITEMENT, melting clock, the wallet |
+| `[06:53]`–`[07:35]` | 8 | NO BOTTOM, SAME PULL, ENGINEERED DELAY, Harris |
+| `[07:46]`–`[08:26]` | 8 | Gloria Mark, the decline graph, 47 SECONDS |
+| `[10:53]`–`[11:08]` | 4 | THE LEVER, THE MAYBE, OLD CIRCUIT NEW LEVER |
 
 Longest run in the file: **27 frames** before, **8 frames** after.
 
@@ -84,24 +84,24 @@ Longest run in the file: **27 frames** before, **8 frames** after.
 
 | Frame | Why the character was placed here | Clause removed |
 |---|---|---|
-| `[#059]` | 'THE GAP' names the episode's core idea; he is present when it is first drawn. | `no characters in the scene` |
-| `[#064]` | Opens the 15-frame Fiorillo/Tobler run; 100% certainty reads as his ease. | `no characters in the scene` |
-| `[#066]` | The 50% coin is the segment's whole point; his reaction marks it. | `no characters in the scene` |
-| `[#067]` | Scales the middle bar against a known height instead of leaving it floating. | `no characters in the scene` |
-| `[#071]` | 'WANTING' is the mechanism being named; he registers it. | `no characters in the scene` |
-| `[#074]` | The needle slam is the payoff of the 100/0/50 run and lands on him. | `no characters in the scene` |
-| `[#090]` | Opens the 11-frame casino run by giving the floor a human scale to recede from. | `no characters in the scene` |
-| `[#093]` | The Skinner-box inset is the episode's argument; he makes the connection visibly. | `no characters in the scene` |
-| `[#096]` | The near-miss only works as a felt beat; without a reaction it is just a diagram. | `no characters in the scene` |
-| `[#098]` | Closes the casino run with the trapped feeling the movement is about. | `no characters in the scene` |
-| `[#102]` | Lost time needs someone losing it; his slack expression carries the Machine Zone. | `no characters in the scene` |
-| `[#104]` | 'UNTIL IT RAN OUT' is the cost; he is the one paying it. | `no faces in the scene` |
-| `[#107]` | The pull-to-refresh / slot-lever rhyme is the segment's thesis and needs his recognition. | `-` |
-| `[#113]` | Six billion pockets includes his; scale reads against a figure. | `no characters in the scene` |
-| `[#117]` | Opens the 8-frame Gloria Mark run; the method is shown to him, not just displayed. | `no characters in the scene` |
-| `[#122]` | 47 seconds is the episode's hardest datum; it lands on him and scales the number. | `no characters in the scene` |
+| `[03:33]` | 'THE GAP' names the episode's core idea; he is present when it is first drawn. | `no characters in the scene` |
+| `[04:01]` | Opens the 15-frame Fiorillo/Tobler run; 100% certainty reads as his ease. | `no characters in the scene` |
+| `[04:07]` | The 50% coin is the segment's whole point; his reaction marks it. | `no characters in the scene` |
+| `[04:11]` | Scales the middle bar against a known height instead of leaving it floating. | `no characters in the scene` |
+| `[04:23]` | 'WANTING' is the mechanism being named; he registers it. | `no characters in the scene` |
+| `[04:36]` | The needle slam is the payoff of the 100/0/50 run and lands on him. | `no characters in the scene` |
+| `[05:38]` | Opens the 11-frame casino run by giving the floor a human scale to recede from. | `no characters in the scene` |
+| `[05:56]` | The Skinner-box inset is the episode's argument; he makes the connection visibly. | `no characters in the scene` |
+| `[06:06]` | The near-miss only works as a felt beat; without a reaction it is just a diagram. | `no characters in the scene` |
+| `[06:17]` | Closes the casino run with the trapped feeling the movement is about. | `no characters in the scene` |
+| `[06:31]` | Lost time needs someone losing it; his slack expression carries the Machine Zone. | `no characters in the scene` |
+| `[06:44]` | 'UNTIL IT RAN OUT' is the cost; he is the one paying it. | `no faces in the scene` |
+| `[06:58]` | The pull-to-refresh / slot-lever rhyme is the segment's thesis and needs his recognition. | `-` |
+| `[07:35]` | Six billion pockets includes his; scale reads against a figure. | `no characters in the scene` |
+| `[07:57]` | Opens the 8-frame Gloria Mark run; the method is shown to him, not just displayed. | `no characters in the scene` |
+| `[08:26]` | 47 seconds is the episode's hardest datum; it lands on him and scales the number. | `no characters in the scene` |
 
-`-` means the frame carried no exclusion clause to remove; `[#108]` already
+`-` means the frame carried no exclusion clause to remove; `[07:05]` already
 showed a mitten glove, so only the lock block was added.
 
 ## Method
@@ -140,39 +140,55 @@ the hook frames use. No new expression vocabulary was invented.
 
 Four placements do structural work rather than filling a gap:
 
-- **`[02:02]`** and **`[#067]`** — he stands at the base of a bar chart so the
+- **`[02:02]`** and **`[04:11]`** — he stands at the base of a bar chart so the
   tall bar is scaled against a known height instead of floating.
 - **`[02:22]`** — his far glove drifts toward his pocket without him looking,
   the exact gesture from `[00:00]`. It closes the Skinner run by rhyming the
   lever with the phone.
-- **`[#108]`** — he kneels at the pull-to-refresh frame and notices the slot
+- **`[07:05]`** — he kneels at the pull-to-refresh frame and notices the slot
   lever overlaid on his own gesture. That rhyme is the segment's thesis.
-- **`[#122]`** — he stands at the foot of the enormous "47", which both scales
+- **`[08:26]`** — he stands at the foot of the enormous "47", which both scales
   the number and puts the episode's hardest datum on a face.
 
-## Open — the timestamps on frames 55–157
+## Timestamps — resolved
 
-The second-half source arrived with **every timestamp field empty**. The scene
-text is complete and was saved verbatim; only the `[MM:SS]` tokens were stripped
-in transit, the same formatting loss that truncated the first paste.
+Frames 55–157 originally landed with sequence markers because the source arrived
+with every timestamp field empty. The real mapping was supplied on 2026-08-29
+and applied to both files. **Only the marker column changed** — verified by
+stripping the marker from every frame in both the committed and the updated
+version and confirming the 157 bodies are identical.
 
-Those 103 frames therefore carry **sequence markers** — `[#055]` through
-`[#157]` — not timestamps. The markers are deliberately shaped so they cannot be
-mistaken for a time: no colon, a leading `#`.
+Validated before applying, not after:
 
-**Nothing was interpolated.** The first 54 frames have irregular, content-driven
-gaps — 2 s, 3 s, 4 s, 5 s, 12 s — so there is no pattern to extend, and inventing
-157 timings for a file that drives a shot render and maps to
-`audio/music_bed_cues.md` would put plausible-looking wrong data where obviously
-missing data is safer.
-
-Supplying the real timestamps is a mechanical find-and-replace on the marker
-column in both files. The segment boundaries already known from the music bed:
-
-| Segment | Range |
+| Check | Result |
 |---|---|
-| The Prediction Gap | `[03:46]`–`[05:37]` |
-| Casino & Machine Zone | `[05:38]`–`[06:44]` |
-| Friction & Gloria Mark | `[06:45]`–`[09:48]` |
-| Savannah Evolution | `[09:49]`–`[10:39]` |
-| Synthesis & Resolution | `[10:40]`–`[11:22]` |
+| Entries supplied | 103, keys 55–157 complete, no gaps |
+| Format | all well-formed `MM:SS` |
+| Monotonic across all 157 frames | **strictly increasing**, `00:00` → `11:22` |
+| Continuity with frame 54 (`[03:19]`) | `[03:22]`, a 3 s gap, in keeping with the file's rhythm |
+| Final frame | `[11:22]` = 682 s = the stated runtime, exact |
+| Markers remaining | 0 |
+
+The supplied script used unanchored patterns (`#{idx}` alongside `\[#{idx:03d}\]`),
+which could in principle have matched inside another marker. It was run against
+a strict anchored implementation on copies of both files and the outputs were
+**byte-identical**, so it was safe on this input. The strict version — which
+also asserts exactly 103 replacements per file — produced what was committed.
+
+### Alignment with the music bed
+
+Four of the five movement boundaries in `audio/music_bed_cues.md` land on a
+frame exactly:
+
+| Movement | Frames | Boundary |
+|---|---|---|
+| The Prediction Gap `[03:46]`–`[05:37]` | 61–89 (29) | exact |
+| Casino & Machine Zone `[05:38]`–`[06:44]` | 90–104 (15) | exact |
+| Friction & Gloria Mark `[06:45]`–`[09:48]` | 105–138 (34) | first frame `[06:50]` |
+| Savannah Evolution `[09:49]`–`[10:39]` | 139–147 (9) | exact |
+| Synthesis & Resolution `[10:40]`–`[11:22]` | 148–157 (10) | exact |
+
+The content corroborates the mapping independently: `[05:38]` is the casino
+floor, `[09:49]` is the first prehistoric frame, `[07:46]` is the Gloria Mark
+introduction and `[08:26]` is the "47 SECONDS" card — matching the
+`[07:46]`–`[08:26]` range named for that segment before the mapping existed.
