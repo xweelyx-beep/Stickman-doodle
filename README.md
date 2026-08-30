@@ -123,15 +123,15 @@ the scene analysis and replace every `[BLOCKED]` marker with a verified lock.
 
 ## Episode assets
 
-One episode is partially in the repository: **Why You Check Your Phone**, 11:22.
+**Why You Check Your Phone** — 11:22, complete.
 
 | | |
 |---|---|
-| Image prompts | 54 of ~157 frames, `[00:00]`–`[03:19]` — `prompts/` |
-| Revision pass | 20.4% → **46.3%** character presence, 14 frames changed — `prompts/revision_changelog.md` |
-| Music bed | 7 movements, full 11:22 — `audio/music_bed_cues.md` |
+| Image prompts | **157 frames** — `prompts/` |
+| Revision pass | 28.7% → **47.8%** character presence, 30 frames changed, 127 byte-identical |
+| Music bed | 7 movements across the full 11:22 — `audio/music_bed_cues.md` |
 
-The prompt file is partial because the source paste was truncated mid-frame at
-`[03:22]`. The missing ~100 frames were **not** generated — see
-`prompts/README.md` for exactly what is absent and why filling it in from a beat
-summary would contradict footage that is already cut.
+One thing outstanding: frames 55–157 carry sequence markers (`[#055]`–`[#157]`)
+rather than timestamps, because the source arrived with those fields empty. No
+timings were invented, and supplying them is a find-and-replace on the marker
+column. See `prompts/README.md`.

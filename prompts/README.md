@@ -35,6 +35,61 @@ them in the episode directory — either is fine, but pick one and stay with it.
 
 ## What is here
 
+**Why You Check Your Phone** — 11:22, all 157 frames.
+
+| File | Frames | Character presence |
+|---|---|---|
+| `image_prompts_why_you_check_your_phone.txt` | 157 | 28.7% (45/157) |
+| `image_prompts_why_you_check_your_phone_v2.txt` | 157 | **47.8% (75/157)** |
+| `revision_changelog.md` | — | the pass between them |
+
+**v2 is the one to generate from.** The base is kept unmodified so the revision
+stays diffable — 30 frames changed, 127 byte-identical.
+
+## One thing to fix before generating
+
+Frames **55–157 carry sequence markers, not timestamps** — `[#055]` through
+`[#157]`. The second-half source arrived with every timestamp field empty; the
+scene text was complete, but the `[MM:SS]` tokens were stripped in transit.
+
+Nothing was interpolated to fill them. The first 54 frames have irregular,
+content-driven gaps, so there is no pattern to extend, and inventing timings for
+a file that drives a shot render and maps to `audio/music_bed_cues.md` would put
+plausible-looking wrong data where obviously missing data is safer.
+
+Supplying the real times is a find-and-replace on the marker column in both
+files. `revision_changelog.md` carries the segment boundaries already known.
+
+## Naming
+
+```
+image_prompts_<episode_slug>.txt      manual Nano Banana Pro queue, one prompt per shot
+video_prompts_<episode_slug>.json     Seedance 1.5 Pro scene prompts
+```
+
+The slug is the episode title, lowercased, spaces to underscores — e.g. an
+episode titled *Why you check your phone* becomes
+`image_prompts_why_you_check_your_phone.txt`.
+
+## What the pipeline emits
+
+`scripts/run.py prompts` writes into an episode directory, not here, using the
+names fixed in `scripts/core/state_manager.py`:
+
+| Key | File |
+|---|---|
+| `seo` | `01_ideation_and_seo.md` |
+| `script` | `02_narration_script.md` |
+| `video_prompts` | `03_kie_video_prompts.json` |
+| `thumbnail_prompts` | `04_kie_thumbnail_prompts.md` |
+| `metadata` | `05_metadata.md` |
+| `state` | `state.json` |
+
+Copy the ones worth keeping into this folder under the naming above, or leave
+them in the episode directory — either is fine, but pick one and stay with it.
+
+## What is here
+
 | File | Frames | Range | Character presence |
 |---|---|---|---|
 | `image_prompts_why_you_check_your_phone.txt` | 54 | `[00:00]`–`[03:19]` | 20.4% (11/54) |
