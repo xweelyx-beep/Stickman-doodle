@@ -39,9 +39,9 @@
       "engine": "nano-banana-pro",
       "model": "nano-banana-pro",
       "locked": true,
-      "route": "manual",
-      "route_options": ["google-flow", "meta-ai"],
-      "_route_note": "Google Flow (Flow Queue - Auto Veo & Nano Banana extension) and Meta AI are browser surfaces with no API this pipeline can reach. The prompt builder emits a numbered, timestamped manual handoff sheet; a human runs the queue and drops the returned files into the episode's assets directory. Nothing here submits automatically.",
+      "route": "manual-or-automated",
+      "route_options": ["google-flow", "meta-ai", "gemini", "fal", "replicate", "flow-playwright"],
+      "_route_note": "Updated 2026-08-29 by operator authorisation. Until then this read route 'manual' and said Google Flow and Meta AI are browser surfaces with no API this pipeline can reach, so nothing here submits automatically. That is no longer true: scripts/auto_generate.py submits to a configured backend - HTTP providers, or Google Flow driven through Playwright - and scripts/config/generation.json holds the backend registry. The manual route still exists and remains the default working method: scripts/generate_frames.py emits the numbered handoff sheet for a human to run, and submits nothing.",
       "filename_convention": "{episode_id}_{NN}_{YYYYMMDD-HHMM}_nbpro.png"
     }
   },
@@ -53,9 +53,9 @@
   },
   "paid_stages": ["voice", "video", "image"],
   "credit_safeguard": {
-    "rule": "No paid generation fires without a human approving the exact credit estimate at gate 3.",
-    "enforced_by": "automation/core/state_manager.py gate 3",
-    "pipeline_submits": false,
-    "_note": "This repository contains no code that calls a paid endpoint. Gate 3 records what a human approved; the human runs the generation."
+    "rule": "No paid generation fires without a human approving the exact count at the point of submission.",
+    "enforced_by": "scripts/core/state_manager.py gate 3 for the four-command pipeline; scripts/auto_generate.py --execute plus --approve-spend N for direct frame rendering",
+    "pipeline_submits": true,
+    "_note": "Changed 2026-08-29 by operator authorisation. This previously read false, with the note 'This repository contains no code that calls a paid endpoint.' scripts/auto_generate.py is exactly such code, so leaving the flag at false would have put a lie beside it. What the flag protected is kept, in three parts: generation.json names no default backend, so the tool choice stays the operator's; every run is a dry run unless --execute is passed; and a paid backend additionally requires --approve-spend N matching the exact number of images that run would submit. The four-command pipeline in run.py still submits nothing itself."
   }
 }

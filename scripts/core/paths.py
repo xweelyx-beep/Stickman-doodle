@@ -37,6 +37,7 @@ _DEFAULT_LAYOUT = {
     "memory": "memory",
     "episodes": "episodes",
     "brand": "references/brand.json",
+    "output": "output",
 }
 
 _cache = {}
@@ -131,6 +132,14 @@ def brand_path(root=None, channel=None):
     root = root or find_root()
     check_channel(channel, root)
     return _under(root, "brand")
+
+
+def output_dir(root=None, create=False):
+    """Where generated assets land. Gitignored — renders are not committed."""
+    path = _under(root, "output")
+    if create:
+        os.makedirs(path, exist_ok=True)
+    return path
 
 
 def memory_dir(root=None, create=True):

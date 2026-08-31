@@ -1,0 +1,103 @@
+{
+  "_note": "Backend registry for scripts/auto_generate.py, added 2026-08-29 when the operator authorised automated submission. Per CLAUDE.md the tool choice and the spend stay the operator's: there is no default backend, --backend is required, and rates are null until someone fills them from the provider's live pricing with a source and a date. The driver reports image counts either way; it never prints a made-up cost.",
+  "default_backend": null,
+  "_default_backend_note": "Deliberately null. Naming one here would be the pipeline picking a paid tool.",
+
+  "backends": {
+    "mock": {
+      "kind": "local",
+      "paid": false,
+      "_note": "Writes a valid PNG locally. No network. Exists so the whole harness - resume, retry, backoff, verification, manifest - can be exercised without spending anything. Use it first."
+    },
+
+    "gemini": {
+      "kind": "http",
+      "paid": true,
+      "api_key_env": "GEMINI_API_KEY",
+      "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/{model}:predict",
+      "model": "imagen-3.0-generate-002",
+      "model_verified": false,
+      "auth": {"header": "x-goog-api-key", "format": "{key}"},
+      "request": {
+        "prompt_path": "instances.0.prompt",
+        "reference_path": "instances.0.image.bytesBase64Encoded",
+        "static": {"parameters": {"sampleCount": 1, "aspectRatio": "16:9"}}
+      },
+      "response": {"image_b64_path": "predictions.0.bytesBase64Encoded"},
+      "_note": "Imagen through the Gemini API predict endpoint. The model id changes as Google ships new versions - model_verified is false until someone checks it against current docs. Reference-image conditioning is only supported by some Imagen variants; if yours does not take one, the driver refuses rather than silently generating 157 frames without the mascot."
+    },
+
+    "fal": {
+      "kind": "http",
+      "paid": true,
+      "api_key_env": "FAL_KEY",
+      "endpoint": "https://fal.run/{model}",
+      "model": "fal-ai/flux/dev/image-to-image",
+      "model_verified": false,
+      "auth": {"header": "Authorization", "format": "Key {key}"},
+      "request": {
+        "prompt_path": "prompt",
+        "reference_path": "image_url",
+        "reference_encoding": "data_uri",
+        "static": {"image_size": "landscape_16_9", "num_images": 1}
+      },
+      "response": {"image_url_path": "images.0.url"},
+      "_note": "fal.run is synchronous for most models. reference_encoding data_uri sends the mascot inline as a base64 data URI, which fal accepts wherever it accepts image_url."
+    },
+
+    "replicate": {
+      "kind": "http",
+      "paid": true,
+      "api_key_env": "REPLICATE_API_TOKEN",
+      "endpoint": "https://api.replicate.com/v1/predictions",
+      "model": null,
+      "model_verified": false,
+      "auth": {"header": "Authorization", "format": "Bearer {key}"},
+      "request": {
+        "prompt_path": "input.prompt",
+        "reference_path": "input.image",
+        "reference_encoding": "data_uri",
+        "version_path": "version",
+        "static": {}
+      },
+      "response": {"poll": true, "status_path": "status", "poll_url_path": "urls.get",
+                   "image_url_path": "output.0"},
+      "_note": "Replicate is async: POST returns a prediction, then poll urls.get until status is succeeded. model must be set to a version id (the 64-char hash), not a model name - the driver refuses to run until it is."
+    },
+
+    "flow": {
+      "kind": "playwright",
+      "paid": true,
+      "url": "https://labs.google/fx/tools/flow",
+      "profile_dir": null,
+      "selectors": {
+        "prompt_input": null,
+        "reference_upload": null,
+        "submit": null,
+        "result_image": null
+      },
+      "_note": "Browser automation against Google Flow, the route models.json originally described as unreachable. It needs a logged-in Google session: point profile_dir at a Chromium user-data directory you have signed into once by hand. Selectors are null because Flow's DOM is not a stable public API - fill them from the live page. Read the risk note in docs/auto-generation.md before using this: automating a Google product may breach its terms of service and put the account at risk."
+    }
+  },
+
+  "rates": {
+    "source": null,
+    "checked_utc": null,
+    "usd_per_image": {
+      "gemini": null,
+      "fal": null,
+      "replicate": null,
+      "flow": null
+    },
+    "_note": "Null until filled from the provider's live pricing page with a source URL and a date. The driver prints image counts always, and a cost only when a sourced rate exists here. It will not estimate from memory."
+  },
+
+  "limits": {
+    "delay_seconds_default": 3.0,
+    "max_retries_default": 5,
+    "backoff_base_seconds": 2.0,
+    "backoff_max_seconds": 60.0,
+    "request_timeout_seconds": 180,
+    "_note": "Delay is applied between requests, not just on retry. Backoff is exponential with jitter and honours Retry-After on 429/503."
+  }
+}

@@ -37,7 +37,7 @@ class LayoutIsDeclaredNotHardCoded(unittest.TestCase):
     def test_every_layout_key_resolves_to_something_that_exists(self):
         m = paths.manifest(ROOT)
         for key, rel in m["layout"].items():
-            if key in ("episodes", "memory"):
+            if key in ("episodes", "memory", "output"):
                 continue  # created on demand
             self.assertTrue(os.path.exists(os.path.join(ROOT, rel)),
                             f"layout.{key} -> {rel} does not exist")

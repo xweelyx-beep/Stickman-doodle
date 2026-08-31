@@ -17,6 +17,7 @@
     "references": "references",
     "audio": "audio",
     "docs": "docs",
-    "brand": "references/brand.json"
+    "brand": "references/brand.json",
+    "output": "output"
   }
 }

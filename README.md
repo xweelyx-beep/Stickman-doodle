@@ -44,6 +44,8 @@ scripts/      pinned snapshot of the generation pipeline        — 16 files
 | Which models and voices are locked? | [`docs/toolchain.md`](docs/toolchain.md) |
 | How do I run an episode? | [`docs/pipeline-commands.md`](docs/pipeline-commands.md) |
 | Why are those gates there? | [`docs/pipeline-conventions.md`](docs/pipeline-conventions.md) |
+| How do I generate the frames by hand? | [`docs/generating-frames.md`](docs/generating-frames.md) |
+| How do I render all 157 automatically? | [`docs/auto-generation.md`](docs/auto-generation.md) |
 | Where did all this come from? | [`docs/MIGRATION.md`](docs/MIGRATION.md) |
 
 ## Workflow
@@ -83,13 +85,16 @@ From `references/style-rules.md` §1, and these are hard:
 - **No block repeats the same motion in all three scenes.**
 - **A negative prompt on every clip.**
 
-### Stickman art is a manual handoff
+### Stickman art: two routes
 
-Nano Banana Pro runs through Google Flow or Meta AI — browser surfaces with no
-API the pipeline can reach. `prompts` emits a numbered, timestamped queue sheet;
-a human runs the queue and drops the returned files back in. Nothing here
-submits automatically, and this repository contains no code that calls a paid
-endpoint.
+**Manual (default).** `prompts` emits a numbered, timestamped queue sheet; a
+human runs it through Google Flow or Meta AI and drops the returned files back
+in. The four-command pipeline submits nothing.
+
+**Automated.** `scripts/auto_generate.py` submits to a configured backend — see
+below. Enabling it means this repository *does* now contain code that calls a
+paid endpoint, which is why `models.json` was rewritten rather than left saying
+otherwise.
 
 ## Current state
 
@@ -120,6 +125,48 @@ the scene analysis and replace every `[BLOCKED]` marker with a verified lock.
 - **Actionable means actionable.** An episode that explains a mechanism but
   hands the viewer nothing to do has drifted toward Lilweid.
 - **Videos get analysed, not guessed.**
+
+## Generating the frames
+
+```bash
+python3 scripts/generate_frames.py plan     # validate and show the batch plan
+python3 scripts/generate_frames.py next     # hand out the next 3 prompts
+python3 scripts/generate_frames.py verify   # record what landed in output/frames/
+python3 scripts/generate_frames.py status   # progress
+```
+
+This driver **submits nothing and makes no network call.** It hands out three
+frames at a time and halts, because
+[`references/style-rules.md`](references/style-rules.md) §1 caps concurrency at
+three and calls bulk generation a failure. What it automates is the queue:
+validation, batching, verification, durable progress, and resume.
+
+Full detail: [`docs/generating-frames.md`](docs/generating-frames.md).
+
+### Or render all 157 automatically
+
+```bash
+python3 scripts/auto_generate.py --list-backends
+python3 scripts/auto_generate.py --backend mock --start 0 --end 156 --execute   # free
+python3 scripts/auto_generate.py --backend fal  --start 0 --end 156 \
+        --delay 3 --execute --approve-spend 157                                 # paid
+```
+
+`scripts/auto_generate.py` submits, downloads, verifies and resumes on its own.
+It supports HTTP providers (Gemini/Imagen, fal, Replicate) and Google Flow via
+Playwright, with exponential backoff, `Retry-After` handling, and rate limiting.
+
+Two guards are deliberate: **`--backend` is required** — `generation.json` names
+no default, because picking a paid tool is yours to do — and every run is a
+**dry run unless `--execute`**, with paid backends additionally needing
+`--approve-spend N` matching the exact image count.
+
+Enabling this changed `models.json`, which previously said the repository
+contained no code calling a paid endpoint. That entry was rewritten rather than
+left to contradict the code beside it.
+
+Full detail, including the terms-of-service risk on the Flow backend:
+[`docs/auto-generation.md`](docs/auto-generation.md).
 
 ## Episode assets
 
