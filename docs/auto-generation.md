@@ -75,7 +75,7 @@ Keys are read from the environment and never written to disk.
 | `--backend` | **required** | `mock`, `gemini`, `fal`, `replicate`, `flow` |
 | `--start` | `0` | first frame |
 | `--end` | `156` | last frame, inclusive |
-| `--delay` | `3.0` | seconds between requests |
+| `--delay` | `3.0` paid, `0` free | seconds between requests |
 | `--max-retries` | `5` | retries per frame |
 | `--execute` | off | actually submit; otherwise dry run |
 | `--approve-spend N` | — | required for paid backends; must equal the real count |
@@ -98,7 +98,11 @@ the driver reported `to render : 1 of 10 (9 already done)` and touched only
 
 ## Retry and rate limiting
 
-- **Delay** between every request, not just after a failure.
+- **Delay** between every request, not just after a failure. It defaults to
+  3 s for a paid backend and **0 for a free one** — pacing exists to stay inside
+  a provider's rate limit, and `mock` has none, so the default would otherwise
+  spend about eight minutes asleep across 157 frames for no reason. An explicit
+  `--delay` wins either way.
 - **Exponential backoff with full jitter** on retryable failures, capped at 60 s.
   Full jitter rather than fixed doubling so parallel runs do not resonate.
 - **`Retry-After` is honoured** when the provider sends one on a 429 or 503.
@@ -186,7 +190,7 @@ At 157 frames a mistake is expensive. Before any paid run:
 python3 scripts/tests/test_auto_generate.py
 ```
 
-34 tests, no network. HTTP backends are exercised through stubs; end-to-end runs
+38 tests, no network. HTTP backends are exercised through stubs; end-to-end runs
 use `mock`. They cover the spend gate, resume, retry and backoff behaviour,
 validation, the reference requirement, request shaping per provider, and that no
 default backend is configured.

@@ -123,6 +123,32 @@ class CostReporting(Base):
         self.assertIn("Free backend", ag.cost_line(self.config(), "mock", 10))
 
 
+class Pacing(Base):
+    """Rate limiting exists for provider limits. A local backend has none."""
+
+    def test_free_backend_defaults_to_no_delay(self):
+        code, out = run(self.root, "--backend", "mock", "--start", "0", "--end", "2")
+        self.assertEqual(code, 0)
+        self.assertIn("pacing     : 0.0s", out)
+
+    def test_paid_backend_keeps_the_configured_delay(self):
+        code, out = run(self.root, "--backend", "fal", "--start", "0", "--end", "2")
+        self.assertEqual(code, 0)
+        self.assertIn("pacing     : 3.0s", out)
+
+    def test_an_explicit_delay_wins_on_a_free_backend(self):
+        code, out = run(self.root, "--backend", "mock", "--start", "0", "--end", "2",
+                        "--delay", "1.5")
+        self.assertEqual(code, 0)
+        self.assertIn("pacing     : 1.5s", out)
+
+    def test_a_negative_delay_is_refused(self):
+        code, out = run(self.root, "--backend", "mock", "--start", "0", "--end", "2",
+                        "--delay", "-1")
+        self.assertNotEqual(code, 0)
+        self.assertIn("cannot be negative", out)
+
+
 class Rendering(Base):
     def test_renders_the_requested_window_only(self):
         code, out = run(self.root, "--backend", "mock", "--start", "5", "--end", "9",

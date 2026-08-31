@@ -171,7 +171,11 @@ def main(argv=None):
                  "this script's. See --list-backends.")
 
     if args.delay is None:
-        args.delay = limits.get("delay_seconds_default", 3.0)
+        # Pacing exists to stay inside a provider's rate limit. A local backend
+        # has none, so defaulting to 3s there would spend eight minutes asleep
+        # for no reason. Still overridable with an explicit --delay.
+        paid = (config.get("backends") or {}).get(args.backend, {}).get("paid", True)
+        args.delay = limits.get("delay_seconds_default", 3.0) if paid else 0.0
     if args.max_retries is None:
         args.max_retries = limits.get("max_retries_default", 5)
     if args.delay < 0:
