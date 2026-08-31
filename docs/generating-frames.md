@@ -5,32 +5,23 @@
 
 ## What it does, and what it cannot
 
-**It generates nothing, and it makes no network call of any kind.** That is not
-a limitation to work around — it is what this repository's own locked config
-requires. `scripts/config/models.json`:
+**It generates nothing, and it makes no network call of any kind.** It hands
+work to a human and verifies what comes back.
 
-```json
-"stickman_art": {
-  "engine": "nano-banana-pro",
-  "route": "manual",
-  "route_options": ["google-flow", "meta-ai"],
-  "_route_note": "Google Flow ... and Meta AI are browser surfaces with no API
-                  this pipeline can reach ... Nothing here submits automatically."
-}
-```
+That was originally the only route. `scripts/config/models.json` put
+`stickman_art` on `route: "manual"`, described Google Flow and Meta AI as
+browser surfaces with no API this pipeline could reach, and set
+`credit_safeguard.pipeline_submits: false` with the note *"This repository
+contains no code that calls a paid endpoint."*
 
-and:
+**That is no longer the whole picture.** On 2026-08-29 the operator authorised
+automated submission, and `scripts/auto_generate.py` now does call paid
+endpoints. Both `models.json` entries were rewritten to say so. See
+[`docs/auto-generation.md`](auto-generation.md).
 
-```json
-"credit_safeguard": {
-  "pipeline_submits": false,
-  "_note": "This repository contains no code that calls a paid endpoint."
-}
-```
-
-Nano Banana Pro reaches this channel through Google Flow or Meta AI, both
-browser surfaces. There is no API to call. A script that claimed otherwise
-would be lying about what it does.
+This driver is unchanged by that. It remains the default working method, and it
+still submits nothing — which is the point of keeping it: a route where no
+credit can be spent by accident.
 
 What it automates is the part that actually costs time across 157 frames:
 **owning the queue.** It parses and validates the prompt file, hands out work in

@@ -57,7 +57,8 @@ Works from any working directory, and from a checkout moved anywhere on disk.
 
 ```bash
 python3 scripts/tests/test_standalone.py       # 17 tests — the decoupling
-python3 scripts/tests/test_generate_frames.py  # 20 tests — the queue driver
+python3 scripts/tests/test_generate_frames.py  # 20 tests — the manual queue driver
+python3 scripts/tests/test_auto_generate.py    # 34 tests — the automated driver
 ```
 
 Stdlib `unittest`, 37 tests total. They assert the layout is declared rather than
@@ -95,9 +96,12 @@ was not portable: it asserts the three-channel tree.
 | `core/memory.py` | 277 | session checkpoints, topic dedup |
 | `core/wizard.py` | 261 | the guided numbered flow |
 | `core/paths.py` | 187 | **new** — the layout authority; the only module that builds a repo path |
-| `generate_frames.py` | 394 | **new** — the 157-frame queue driver; submits nothing |
+| `generate_frames.py` | 394 | the manual 157-frame queue driver; submits nothing |
+| `auto_generate.py` | 290 | **new** — automated end-to-end rendering; submits |
+| `core/backends.py` | 410 | **new** — generation backends: mock, HTTP providers, Playwright |
 | `tests/test_standalone.py` | 177 | **new** — 17 tests guarding the decoupling |
-| `tests/test_generate_frames.py` | 240 | **new** — 20 tests guarding the queue driver |
+| `tests/test_generate_frames.py` | 240 | 20 tests guarding the manual queue driver |
+| `tests/test_auto_generate.py` | 380 | **new** — 34 tests guarding the automated driver |
 | `config/*.json` | — | the toolchain locks — see `docs/toolchain.md` |
 
 `automation/tests/test_pipeline.py` (648 lines) was not copied: it asserts
