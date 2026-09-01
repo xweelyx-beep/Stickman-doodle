@@ -59,9 +59,10 @@ Works from any working directory, and from a checkout moved anywhere on disk.
 python3 scripts/tests/test_standalone.py       # 17 tests — the decoupling
 python3 scripts/tests/test_generate_frames.py  # 20 tests — the manual queue driver
 python3 scripts/tests/test_auto_generate.py    # 38 tests — the automated driver
+python3 scripts/tests/test_video_pipeline.py   # 28 tests — timeline, assembly, audio
 ```
 
-Stdlib `unittest`, 75 tests total. They assert the layout is declared rather than
+Stdlib `unittest`, 103 tests total. They assert the layout is declared rather than
 hard-coded, that root resolution works from any cwd and fails loudly outside a
 checkout, that no module builds a Business path, that the brand gate reads a
 file that is really on disk, and that the blocked canon still refuses to
@@ -98,10 +99,14 @@ was not portable: it asserts the three-channel tree.
 | `core/paths.py` | 187 | **new** — the layout authority; the only module that builds a repo path |
 | `generate_frames.py` | 394 | the manual 157-frame queue driver; submits nothing |
 | `auto_generate.py` | 290 | **new** — automated end-to-end rendering; submits |
-| `core/backends.py` | 410 | **new** — generation backends: mock, HTTP providers, Playwright |
+| `core/backends.py` | 410 | generation backends: mock, HTTP providers, Playwright |
+| `assemble_video.py` | 319 | **new** — 157 shots to one 4K master, with camera motion |
+| `build_full_video.py` | 288 | **new** — the single command: generate, validate, mix, assemble |
+| `core/timeline.py` | 224 | **new** — shot durations, camera moves, dynamic-clip selection |
 | `tests/test_standalone.py` | 177 | **new** — 17 tests guarding the decoupling |
 | `tests/test_generate_frames.py` | 240 | 20 tests guarding the manual queue driver |
-| `tests/test_auto_generate.py` | 406 | **new** — 38 tests guarding the automated driver |
+| `tests/test_auto_generate.py` | 406 | 38 tests guarding the automated driver |
+| `tests/test_video_pipeline.py` | 258 | **new** — 28 tests guarding timeline, assembly and audio |
 | `config/*.json` | — | the toolchain locks — see `docs/toolchain.md` |
 
 `automation/tests/test_pipeline.py` (648 lines) was not copied: it asserts

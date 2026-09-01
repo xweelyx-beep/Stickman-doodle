@@ -46,6 +46,7 @@ scripts/      pinned snapshot of the generation pipeline        — 16 files
 | Why are those gates there? | [`docs/pipeline-conventions.md`](docs/pipeline-conventions.md) |
 | How do I generate the frames by hand? | [`docs/generating-frames.md`](docs/generating-frames.md) |
 | How do I render all 157 automatically? | [`docs/auto-generation.md`](docs/auto-generation.md) |
+| How do I build the finished 4K video? | [`docs/video-pipeline.md`](docs/video-pipeline.md) |
 | Where did all this come from? | [`docs/MIGRATION.md`](docs/MIGRATION.md) |
 
 ## Workflow
@@ -167,6 +168,26 @@ left to contradict the code beside it.
 
 Full detail, including the terms-of-service risk on the Flow backend:
 [`docs/auto-generation.md`](docs/auto-generation.md).
+
+### Or build the whole 4K film in one command
+
+```bash
+python3 scripts/build_full_video.py --backend mock --execute
+```
+
+Generates the frames, validates them, builds the audio bed from
+[`audio/music_bed_cues.md`](audio/music_bed_cues.md), and assembles
+`output/final_video_4k.mp4` — 3840×2160, H.264 + AAC.
+
+Shot durations come from the `[MM:SS]` markers, so picture is locked to the VO
+timing by construction: the 156 gaps sum to exactly 682 s. Stills get continuous
+camera motion from the canon's four-move vocabulary, and 18 shots are flagged
+where a generated clip would beat a panned still.
+
+Needs `ffmpeg` on PATH. **The voiceover and music tracks are not in the
+repository** — without them the build produces a silent 4K master and says so.
+
+Full detail: [`docs/video-pipeline.md`](docs/video-pipeline.md).
 
 ## Episode assets
 
