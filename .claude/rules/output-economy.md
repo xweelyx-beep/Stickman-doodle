@@ -4,9 +4,7 @@ The cheapest token is the one not spent; the second cheapest is the one that
 carries a fact.
 
 Ported from xweelyx-beep/Business on 2026-09-02 with the paths rewritten for
-this repository. The Business copy is loaded into every session by a hook;
-**this repository has no hooks**, so this is a convention to follow, not one
-that is injected.
+this repository.
 
 ## In replies
 
@@ -36,8 +34,12 @@ that is injected.
 
 ## When the session gets long
 
-- Past roughly 70% of the context window, finish the step in hand rather than
-  starting a new one.
+- The status line shows context use (`.claude/statusline.py`). Past ~70% finish
+  the step in hand rather than starting a new one.
+- `.claude/hooks/context_watch.py` warns once when the transcript gets long, and
+  `.claude/hooks/precompact_checkpoint.py` puts the position on disk before a
+  compaction so `session_context.py` can hand it back afterwards. Checkpoint by
+  hand before ending a session: `python3 scripts/core/memory.py checkpoint`.
 - An episode's `state.json` past 96 KB triggers the pipeline's own overflow
   banner (`STATE_WARN_KB` in `scripts/run.py`). That is the signal to finish the
   session, not to push through it. The position is already checkpointed in

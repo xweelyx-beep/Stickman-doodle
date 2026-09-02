@@ -9,6 +9,9 @@
 # Episode working directories, when they land here
 _upload/
 
+# Hook scratch — context_watch.py records which thresholds it has already fired
+.claude/state/
+
 # Python
 __pycache__/
 *.py[cod]
