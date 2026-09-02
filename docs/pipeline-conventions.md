@@ -193,7 +193,8 @@ automation/tests/test_pipeline.py     python3 automation/tests/test_pipeline.py
 
 channels/<channel>/episodes/<episode_id>/
     01_ideation_and_seo.md  02_narration_script.md  03_kie_video_prompts.json
-    04_kie_thumbnail_prompts.md  05_metadata.md  06_performance_audit.md  state.json
+    04_kie_thumbnail_prompts.md  05_metadata.md  metadata.json
+    06_performance_audit.md  state.json
 channels/<channel>/publish-plan.csv
 channels/stickman/brand.json          the Stickman longform gate
 _upload/                              dated hardlinks for the upload queue

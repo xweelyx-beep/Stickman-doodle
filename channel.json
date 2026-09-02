@@ -17,6 +17,7 @@
     "references": "references",
     "audio": "audio",
     "docs": "docs",
+    "workflows": "workflows",
     "brand": "references/brand.json",
     "output": "output"
   }

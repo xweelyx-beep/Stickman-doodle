@@ -4,7 +4,8 @@
     init     -> writes 01_ideation_and_seo.md,  opens GATE 1 (title & hook)
     script   -> writes 02_narration_script.md,  opens GATE 2 (script)
     prompts  -> writes 03/04 KIE prompts,       opens GATE 3 (credit spend)
-    package  -> writes 05_metadata.md, updates publish-plan.csv, RENDERED/PUBLISHED
+    package  -> writes 05_metadata.md and metadata.json, updates publish-plan.csv,
+                RENDERED/PUBLISHED
 
 Each generate command stops at its gate and does nothing further. There is no
 --approve flag on any of them: approval is always a separate invocation of
@@ -30,6 +31,7 @@ import scheduler                                              # noqa: E402
 import wizard                                                 # noqa: E402
 import script_engine                                          # noqa: E402
 import seo_engine                                             # noqa: E402
+import seo_generator                                          # noqa: E402
 from state_manager import (EPISODE_FILES, EpisodeState, channel_dir,  # noqa: E402
                            episode_dir, utcnow, write_atomic)
 
@@ -383,6 +385,18 @@ def update_publish_plan(root, state, title, publish_date):
     return path
 
 
+def export_metadata_json(state, root, publish_date):
+    """The machine-readable half of the package stage: title variants under
+    their character budgets, the structured description, and the tag field, as
+    `metadata.json` beside the episode's other assets. 05_metadata.md is what a
+    person reads; this is what an upload tool reads."""
+    payload = seo_generator.from_state(state.data, publish_date=publish_date)
+    state.data["metadata"] = payload
+    write_episode_file(state, root, "metadata_json",
+                       json.dumps(payload, indent=2) + "\n")
+    return payload
+
+
 def cmd_package(args, root):
     state = EpisodeState.load(root, args.channel, args.episode)
     state.require_command("package")
@@ -392,18 +406,21 @@ def cmd_package(args, root):
             raise SystemExit(
                 "error: --publish moves RENDERED -> PUBLISHED, and this episode is %s. "
                 "Run `package` without --publish first." % state.state)
-        text, title = build_metadata(state, root, args.publish_date
-                                     or state.data.get("publish_date"))
+        publish_date = args.publish_date or state.data.get("publish_date")
+        text, title = build_metadata(state, root, publish_date)
         write_episode_file(state, root, "metadata", text)
-        state.data["publish_date"] = args.publish_date or state.data.get("publish_date")
+        state.data["publish_date"] = publish_date
+        export_metadata_json(state, root, publish_date)
         state.transition("PUBLISHED", actor=args.by, note="published")
         path = update_publish_plan(root, state, title, state.data.get("publish_date"))
+        print("wrote %s" % rel(root, os.path.join(state.dir, EPISODE_FILES["metadata_json"])))
         print("state: PUBLISHED  ·  plan updated %s" % rel(root, path))
         return 0
 
     text, title = build_metadata(state, root, args.publish_date)
     write_episode_file(state, root, "metadata", text)
     state.data["publish_date"] = args.publish_date
+    meta = export_metadata_json(state, root, args.publish_date)
     if state.state == "PROMPTS_STAGED":
         state.transition("RENDERED", actor=args.by, note="metadata packaged")
     else:
@@ -414,8 +431,14 @@ def cmd_package(args, root):
         print(json.dumps(state.summary(), indent=2))
         return 0
     print("wrote %s" % rel(root, os.path.join(state.dir, EPISODE_FILES["metadata"])))
+    print("wrote %s" % rel(root, os.path.join(state.dir, EPISODE_FILES["metadata_json"])))
     print("wrote %s" % rel(root, path))
     print("state: %s" % state.state)
+    print("title: %d chars  ·  description: %d chars  ·  tags: %d (%d/%d chars)"
+          % (meta["title_chars"], meta["description"]["chars"], meta["tags"]["count"],
+             meta["tags"]["field_chars"], meta["tags"]["field_limit"]))
+    for issue in meta["validation"]:
+        print("  %-8s %s: %s" % (issue["severity"], issue["code"], issue["message"]))
     print()
     banner([
         "Render the clips in KIE, cut the episode, upload it, then:",
