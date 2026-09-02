@@ -61,19 +61,43 @@ def load_config(root):
         return json.load(fh)
 
 
-def verify_bytes(data):
+def verify_bytes(data, backend=None):
     """Same contract as generate_frames.verify, applied before anything is saved.
 
-    Returns None when the bytes are a usable render, else why they are not.
+    Returns (reason, retryable), or (None, False) when the bytes are usable.
+
+    The retryable flag matters more here than anywhere else in the driver: on a
+    paid backend every retry is another billed generation. A provider that
+    returns JPEG returns JPEG every time, so retrying a format mismatch buys
+    nothing and costs six images per frame.
     """
+    ct = getattr(backend, "last_content_type", None)
+    where = (" (server sent Content-Type: %s)" % ct) if ct else ""
+
     if len(data) < gfr.MIN_BYTES:
-        return "only %d bytes (floor is %d) — probably a failed render" % (
-            len(data), gfr.MIN_BYTES)
+        fmt = backends.sniff_format(data)
+        if fmt in ("JSON", "HTML", "XML/HTML", None):
+            # A short text body is an error message, not a truncated image.
+            return ("the response is not an image%s — %s"
+                    % (where, backends.describe_bytes(data)), False)
+        # A short but real image is more likely a cut-off download.
+        return ("only %d bytes (floor is %d) — probably a truncated download%s"
+                % (len(data), gfr.MIN_BYTES, where), True)
+
     if data[:8] != gfr.PNG_MAGIC:
-        return "not a PNG (bad magic bytes)"
+        fmt = backends.sniff_format(data) or "an unrecognised format"
+        hint = ""
+        if fmt == "JPEG":
+            hint = ("\n        FLUX and several other models default to JPEG. Set "
+                    "request.static.output_format to \"png\" for this backend in "
+                    "scripts/config/generation.json.")
+        return ("expected PNG, got %s%s.%s\n        %s"
+                % (fmt, where, hint, backends.describe_bytes(data)), False)
+
     if data[12:16] != b"IHDR":
-        return "PNG header is malformed (no IHDR)"
-    return None
+        return ("PNG header is malformed (no IHDR)%s — %s"
+                % (where, backends.describe_bytes(data)), False)
+    return None, False
 
 
 def cost_line(config, backend_name, count):
@@ -115,8 +139,11 @@ def render_one(backend, frame, ref_bytes, out_path, args, limits):
             continue
         except Exception as e:                      # a backend bug, not a refusal
             return False, "%s: %s" % (type(e).__name__, e)
-        bad = verify_bytes(data)
+        bad, bad_retryable = verify_bytes(data, backend)
         if bad:
+            if not bad_retryable:
+                return False, (bad + "  (not retryable — every retry would be "
+                               "another billed generation)")
             last = bad
             continue
         tmp = out_path + ".part"
@@ -214,7 +241,7 @@ def main(argv=None):
         path = os.path.join(out_dir, f["filename"])
         if not args.regenerate and os.path.isfile(path):
             with open(path, "rb") as fh:
-                if verify_bytes(fh.read()) is None:
+                if verify_bytes(fh.read())[0] is None:
                     continue                        # already good — resume past it
         todo.append(f)
 

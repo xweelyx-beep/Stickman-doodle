@@ -21,7 +21,8 @@
       "request": {
         "prompt_path": "instances.0.prompt",
         "reference_path": "instances.0.image.bytesBase64Encoded",
-        "static": {"parameters": {"sampleCount": 1, "aspectRatio": "16:9"}}
+        "static": {"parameters": {"sampleCount": 1, "aspectRatio": "16:9",
+                                  "outputOptions": {"mimeType": "image/png"}}}
       },
       "response": {"image_b64_path": "predictions.0.bytesBase64Encoded"},
       "_note": "Imagen through the Gemini API predict endpoint. The model id changes as Google ships new versions - model_verified is false until someone checks it against current docs. Reference-image conditioning is only supported by some Imagen variants; if yours does not take one, the driver refuses rather than silently generating 157 frames without the mascot."
@@ -39,10 +40,10 @@
         "prompt_path": "prompt",
         "reference_path": "image_url",
         "reference_encoding": "data_uri",
-        "static": {"image_size": "landscape_16_9", "num_images": 1}
+        "static": {"image_size": "landscape_16_9", "num_images": 1, "output_format": "png"}
       },
       "response": {"image_url_path": "images.0.url"},
-      "_note": "fal.run is synchronous for most models. reference_encoding data_uri sends the mascot inline as a base64 data URI, which fal accepts wherever it accepts image_url."
+      "_note": "fal.run is synchronous for most models. reference_encoding data_uri sends the mascot inline as a base64 data URI, which fal accepts wherever it accepts image_url. output_format is png because FLUX defaults to JPEG, and the driver only accepts PNG - a live run on 2026-08-30 returned JPEG and failed verification. If a model ignores this key the driver now names the format it actually got rather than saying 'bad magic bytes'."
     },
 
     "replicate": {

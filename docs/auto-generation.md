@@ -137,6 +137,31 @@ Bytes are checked **before** anything reaches disk, against the same contract
 A backend returning junk therefore produces a `FAILED` line, a non-zero exit, and
 no file at all.
 
+**A wrong format is never retried.** On a paid backend every retry is another
+billed generation, and a provider that returns JPEG returns JPEG every time —
+six retries buys nothing and costs six images per frame. Only a plausibly
+truncated download is retried.
+
+**The failure names the format and the fix.** A live run on 2026-08-30 returned
+JPEG and reported only `not a PNG (bad magic bytes)`. It now reads:
+
+```
+expected PNG, got JPEG (server sent Content-Type: image/jpeg).
+    FLUX and several other models default to JPEG. Set request.static.output_format
+    to "png" for this backend in scripts/config/generation.json.
+    JPEG, 6010 bytes, first 200 hex: ffd8ffe000104a464946...
+```
+
+and an error body arrives decoded rather than as hex:
+
+```
+the response is not an image — JSON, 49 bytes, first 49:
+'{"detail":"Unauthorized: invalid or expired key"}'
+```
+
+Both `fal` and `gemini` now request PNG explicitly in `generation.json`
+(`output_format` and `outputOptions.mimeType` respectively).
+
 ## The reference image
 
 Every frame is conditioned on `references/character_ref_body.png`. The driver
@@ -205,7 +230,7 @@ At 157 frames a mistake is expensive. Before any paid run:
 python3 scripts/tests/test_auto_generate.py
 ```
 
-50 tests, no network. HTTP backends are exercised through stubs; end-to-end runs
+67 tests, no network. HTTP backends are exercised through stubs; end-to-end runs
 use `mock`. They cover the spend gate, resume, retry and backoff behaviour,
 validation, the reference requirement, request shaping per provider, and that no
 default backend is configured.

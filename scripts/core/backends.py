@@ -104,6 +104,58 @@ def backoff_delay(attempt, base, cap):
 RETRYABLE_TUNNEL_CODES = (408, 425, 429, 500, 502, 503, 504)
 
 
+# Enough magic bytes to name what actually came back. "You asked for PNG and got
+# JPEG" is a fix; "bad magic bytes" is a puzzle.
+MAGIC = (
+    (b"\x89PNG\r\n\x1a\n", "PNG"),
+    (b"\xff\xd8\xff", "JPEG"),
+    (b"GIF87a", "GIF"),
+    (b"GIF89a", "GIF"),
+    (b"BM", "BMP"),
+    (b"II*\x00", "TIFF"),
+    (b"MM\x00*", "TIFF"),
+    (b"%PDF", "PDF"),
+)
+
+
+def sniff_format(data):
+    """Name the payload from its first bytes, or None if unrecognised."""
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "WEBP"
+    for magic, name in MAGIC:
+        if data.startswith(magic):
+            return name
+    head = data[:64].lstrip()[:32].lower()
+    if head.startswith(b"{") or head.startswith(b"["):
+        return "JSON"
+    if head.startswith(b"<!doctype html") or head.startswith(b"<html"):
+        return "HTML"
+    if head.startswith(b"<?xml") or head.startswith(b"<"):
+        return "XML/HTML"
+    return None
+
+
+def describe_bytes(data, limit=200):
+    """What arrived, in a form worth pasting into a bug report.
+
+    Text-ish payloads (a JSON error body, an HTML error page) are shown decoded,
+    because that is where the provider puts the actual reason. Binary payloads
+    get a hex preview.
+    """
+    fmt = sniff_format(data)
+    head = data[:limit]
+    if fmt in ("JSON", "HTML", "XML/HTML", None):
+        try:
+            text = head.decode("utf-8", "replace").strip()
+            if text:
+                return "%s, %d bytes, first %d: %r" % (
+                    fmt or "unrecognised", len(data), len(head), text)
+        except Exception:
+            pass
+    return "%s, %d bytes, first %d hex: %s" % (
+        fmt or "unrecognised", len(data), len(head), head.hex())
+
+
 def classify_urlerror(reason):
     """(retryable, message) for a urllib URLError.
 
@@ -153,6 +205,10 @@ class Backend(object):
     def __init__(self, cfg, limits):
         self.cfg = cfg
         self.limits = limits
+        # Set by HTTP backends on each download so a format mismatch can be
+        # reported with the server's own Content-Type rather than a guess.
+        self.last_content_type = None
+        self.last_url = None
 
     def preflight(self):
         return
@@ -302,7 +358,13 @@ class HTTPBackend(Backend):
         try:
             with urllib.request.urlopen(
                     req, timeout=self.limits.get("request_timeout_seconds", 180)) as r:
-                return r.read()
+                data = r.read()
+                # Remember what the server said it was sending. When the bytes
+                # turn out not to be a PNG, this is the first thing worth
+                # knowing, and it is gone by the time the caller notices.
+                self.last_content_type = r.headers.get("Content-Type") or "unset"
+                self.last_url = url
+                return data
         except urllib.error.HTTPError as e:
             raise BackendError(
                 "could not download the result: HTTP %s" % e.code,

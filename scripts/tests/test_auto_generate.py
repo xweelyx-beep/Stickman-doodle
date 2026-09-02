@@ -214,12 +214,134 @@ class Resume(Base):
         self.assertIn("to render  : 5 of 5", out)
 
 
+class FormatDiagnostics(Base):
+    """A wrong format must be named, and must never be retried — each retry on a
+    paid backend is another billed generation."""
+
+    JPEG = b"\xff\xd8\xff\xe0" + b"\x00" * 6000
+
+    def test_jpeg_is_named_not_called_bad_magic(self):
+        reason, retryable = ag.verify_bytes(self.JPEG)
+        self.assertIn("expected PNG, got JPEG", reason)
+        self.assertNotIn("bad magic bytes", reason)
+
+    def test_jpeg_points_at_the_actual_fix(self):
+        reason, _ = ag.verify_bytes(self.JPEG)
+        self.assertIn("output_format", reason)
+        self.assertIn("generation.json", reason)
+
+    def test_a_format_mismatch_is_not_retryable(self):
+        _, retryable = ag.verify_bytes(self.JPEG)
+        self.assertFalse(retryable)
+
+    def test_a_truncated_png_is_retryable(self):
+        short = backends.PNG_MAGIC if hasattr(backends, "PNG_MAGIC") else b"\x89PNG\r\n\x1a\n"
+        _, retryable = ag.verify_bytes(short + b"\x00" * 100)
+        self.assertTrue(retryable, "a cut-off download is worth one more try")
+
+    def test_a_json_error_body_is_shown_decoded(self):
+        body = b'{"detail":"Unauthorized: invalid credentials"}'
+        reason, retryable = ag.verify_bytes(body)
+        self.assertIn("Unauthorized", reason)
+        self.assertFalse(retryable)
+
+    def test_an_html_error_page_is_shown_decoded(self):
+        reason, _ = ag.verify_bytes(b"<!doctype html><title>502 Bad Gateway</title>")
+        self.assertIn("502", reason)
+
+    def test_the_content_type_header_is_surfaced(self):
+        class Stub:
+            last_content_type = "image/jpeg"
+        reason, _ = ag.verify_bytes(self.JPEG, Stub())
+        self.assertIn("image/jpeg", reason)
+
+    def test_a_wrong_format_costs_exactly_one_generation(self):
+        state = {"n": 0}
+
+        class ReturnsJpeg(backends.Backend):
+            name, paid, takes_reference = "jpeg", False, True
+
+            def generate(self, prompt, reference_bytes):
+                state["n"] += 1
+                return FormatDiagnostics.JPEG
+
+        real = backends.build
+        backends.build = lambda n, c: ReturnsJpeg({}, {})
+        try:
+            code, out = run(self.root, "--backend", "mock", "--start", "0",
+                            "--end", "0", "--execute", "--delay", "0",
+                            "--max-retries", "5")
+        finally:
+            backends.build = real
+        self.assertNotEqual(code, 0)
+        self.assertEqual(state["n"], 1,
+                         "retrying a JPEG response bills five more images for nothing")
+        self.assertIn("billed generation", out)
+
+
+class Sniffing(Base):
+    def test_common_formats_are_identified(self):
+        cases = {
+            b"\x89PNG\r\n\x1a\n" + b"\x00" * 20: "PNG",
+            b"\xff\xd8\xff\xe0" + b"\x00" * 20: "JPEG",
+            b"GIF89a" + b"\x00" * 20: "GIF",
+            b"RIFF\x00\x00\x00\x00WEBP" + b"\x00" * 20: "WEBP",
+            b'{"error": 1}': "JSON",
+            b"<!doctype html><body>": "HTML",
+        }
+        for data, want in cases.items():
+            self.assertEqual(backends.sniff_format(data), want)
+
+    def test_an_unknown_payload_returns_none(self):
+        self.assertIsNone(backends.sniff_format(b"\x01\x02\x03\x04binary junk"))
+
+    def test_describe_shows_text_bodies_readably(self):
+        d = backends.describe_bytes(b'{"detail":"quota exceeded"}')
+        self.assertIn("quota exceeded", d)
+        self.assertIn("JSON", d)
+
+    def test_describe_shows_binary_as_hex(self):
+        d = backends.describe_bytes(b"\xff\xd8\xff\xe0" + b"\xab" * 300)
+        self.assertIn("JPEG", d)
+        self.assertIn("hex", d)
+
+    def test_describe_respects_the_limit(self):
+        d = backends.describe_bytes(b"\xff\xd8\xff" + b"\xab" * 5000, limit=200)
+        self.assertIn("first 200", d)
+        self.assertLess(len(d), 600)
+
+
+class FalConfig(Base):
+    def test_fal_asks_for_png_explicitly(self):
+        static = self.config()["backends"]["fal"]["request"]["static"]
+        self.assertEqual(static.get("output_format"), "png",
+                         "FLUX defaults to JPEG; the driver only accepts PNG")
+
+    def test_gemini_asks_for_png_explicitly(self):
+        params = self.config()["backends"]["gemini"]["request"]["static"]["parameters"]
+        self.assertEqual(params.get("outputOptions", {}).get("mimeType"), "image/png")
+
+    def test_the_png_request_reaches_the_body(self):
+        cfg = self.config()["backends"]["fal"]
+        body = json.loads(backends.HTTPBackend("fal", cfg, {})._body("P", b"REF"))
+        self.assertEqual(body["output_format"], "png")
+
+
 class Validation(Base):
     def test_verify_bytes_matches_the_shared_contract(self):
-        self.assertIsNotNone(ag.verify_bytes(b"tiny"))
-        self.assertIn("not a PNG", ag.verify_bytes(b"x" * (gfr.MIN_BYTES + 1)))
+        self.assertIsNotNone(ag.verify_bytes(b"tiny")[0])
+        self.assertIn("expected PNG",
+                      ag.verify_bytes(b"x" * (gfr.MIN_BYTES + 1))[0])
         good = backends.MockBackend({}, {}).generate("x", None)
-        self.assertIsNone(ag.verify_bytes(good))
+        self.assertIsNone(ag.verify_bytes(good)[0])
+
+    def test_a_good_png_is_still_recognised_for_resume(self):
+        """The regression guard: verify_bytes returning a tuple must not make
+        every existing frame look unrendered."""
+        good = backends.MockBackend({}, {}).generate("x", None)
+        reason, retryable = ag.verify_bytes(good)
+        self.assertIsNone(reason)
+        self.assertFalse(retryable)
 
     def test_a_backend_returning_junk_never_reaches_disk(self):
         class Junk(backends.Backend):
