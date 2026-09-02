@@ -24,6 +24,7 @@ references/   mascot lock, style rules, brand gate              — 5 files
 audio/        music cues and voiceover assets                   — no assets yet
 docs/         channel bible, pipeline docs, toolchain locks     — 5 files
 scripts/      pinned snapshot of the generation pipeline        — 16 files
+workflows/    cross-channel blueprints, reference only          — 1 file
 ```
 
 | Folder | What belongs there |
@@ -33,6 +34,7 @@ scripts/      pinned snapshot of the generation pipeline        — 16 files
 | [`audio/`](audio/) | Cue sheets and voiceover settings. Renders are gitignored — commit what reproduces them, not the files |
 | [`docs/`](docs/) | The channel bible and everything about how the pipeline runs |
 | [`scripts/`](scripts/) | Read-only snapshot. Business is the source of truth — see [`scripts/README.md`](scripts/README.md) |
+| [`workflows/`](workflows/) | Blueprints ported from Business for reference. **Not canon, and not necessarily about this channel** — each states its own scope |
 
 ## Start here
 
