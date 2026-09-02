@@ -81,6 +81,7 @@ Keys are read from the environment and never written to disk.
 | `--approve-spend N` | — | required for paid backends; must equal the real count |
 | `--regenerate` | off | re-render frames that already verify |
 | `--no-reference` | off | run without the mascot — invites drift |
+| `--abort-after N` | `3` | stop after N consecutive failures; `0` disables |
 | `--list-backends` | — | show what is configured |
 
 ## Resume
@@ -108,6 +109,20 @@ the driver reported `to render : 1 of 10 (9 already done)` and touched only
 - **`Retry-After` is honoured** when the provider sends one on a 429 or 503.
 - **4xx is not retried.** A malformed request fails the same way five times; the
   driver reports it and moves on rather than burning the window.
+- **Transport faults are classified, not blanket-retried.** A proxy answering
+  4xx to CONNECT, a TLS verification failure, and a hostname that does not
+  resolve all mean the request never left the machine and never will. Those fail
+  immediately. Timeouts, resets, and proxy 429/502/503 still retry, and anything
+  unrecognised defaults to retryable — a blip is likelier than a permanent
+  condition.
+- **A systemic fault stops the run.** `--abort-after N` (default 3) halts after N
+  consecutive failures. A blocked host, a bad key or a wrong model id fails
+  identically on every frame, and discovering that 157 times is just waiting.
+  `--abort-after 0` disables it.
+
+Measured on a container whose egress policy blocks `fal.run`: **2.7 minutes down
+to 7.4 seconds**, stopping at 3 frames instead of 157. The old path would have
+spent about 2.4 hours reaching the same answer.
 
 ## Validation
 
@@ -190,7 +205,7 @@ At 157 frames a mistake is expensive. Before any paid run:
 python3 scripts/tests/test_auto_generate.py
 ```
 
-38 tests, no network. HTTP backends are exercised through stubs; end-to-end runs
+50 tests, no network. HTTP backends are exercised through stubs; end-to-end runs
 use `mock`. They cover the spend gate, resume, retry and backoff behaviour,
 validation, the reference requirement, request shaping per provider, and that no
 default backend is configured.

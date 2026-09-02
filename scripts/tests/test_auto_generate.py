@@ -337,6 +337,136 @@ class Retry(Base):
         self.assertEqual(state["n"], 1, "a 4xx should not be retried five times")
 
 
+class ErrorClassification(Base):
+    """Retrying is only worth doing when it could possibly work."""
+
+    def test_a_proxy_connect_refusal_is_not_retryable(self):
+        """The exact failure seen against fal.run from a restricted container."""
+        ok, msg = backends.classify_urlerror(
+            "Tunnel connection failed: 403 Forbidden")
+        self.assertFalse(ok)
+        self.assertIn("egress policy", msg)
+        self.assertNotIn("bad key", msg.split("not a bad key")[0])
+
+    def test_a_proxy_429_is_still_retryable(self):
+        ok, _ = backends.classify_urlerror("Tunnel connection failed: 429 Too Many")
+        self.assertTrue(ok)
+
+    def test_a_proxy_502_is_still_retryable(self):
+        ok, _ = backends.classify_urlerror("Tunnel connection failed: 502 Bad Gateway")
+        self.assertTrue(ok)
+
+    def test_a_tls_failure_is_not_retryable(self):
+        ok, msg = backends.classify_urlerror(
+            "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed")
+        self.assertFalse(ok)
+        self.assertIn("trust store", msg)
+
+    def test_an_unresolvable_host_is_not_retryable(self):
+        ok, msg = backends.classify_urlerror(
+            "[Errno -2] Name or service not known")
+        self.assertFalse(ok)
+        self.assertIn("generation.json", msg)
+
+    def test_a_timeout_is_still_retryable(self):
+        self.assertTrue(backends.classify_urlerror("timed out")[0])
+
+    def test_a_reset_is_still_retryable(self):
+        self.assertTrue(
+            backends.classify_urlerror("[Errno 104] Connection reset by peer")[0])
+
+    def test_an_unrecognised_fault_defaults_to_retryable(self):
+        """A blip is likelier than a permanent condition; do not fail fast on
+        something we have not reasoned about."""
+        self.assertTrue(backends.classify_urlerror("something entirely new")[0])
+
+    def test_a_non_retryable_transport_error_is_attempted_once(self):
+        state = {"n": 0}
+
+        class Blocked(backends.Backend):
+            name, paid, takes_reference = "blocked", False, True
+
+            def generate(self, prompt, reference_bytes):
+                state["n"] += 1
+                raise backends.BackendError(
+                    "proxy refused", retryable=False)
+
+        real = backends.build
+        backends.build = lambda n, c: Blocked({}, {})
+        try:
+            code, out = run(self.root, "--backend", "mock", "--start", "0",
+                            "--end", "0", "--execute", "--delay", "0",
+                            "--max-retries", "5")
+        finally:
+            backends.build = real
+        self.assertNotEqual(code, 0)
+        self.assertEqual(state["n"], 1, "a policy denial must not be retried")
+        self.assertIn("not retryable", out)
+
+
+class AbortAfterConsecutiveFailures(Base):
+    def test_a_systemic_fault_stops_the_run_early(self):
+        state = {"n": 0}
+
+        class AlwaysFails(backends.Backend):
+            name, paid, takes_reference = "dead", False, True
+
+            def generate(self, prompt, reference_bytes):
+                state["n"] += 1
+                raise backends.BackendError("blocked", retryable=False)
+
+        real = backends.build
+        backends.build = lambda n, c: AlwaysFails({}, {})
+        try:
+            code, out = run(self.root, "--backend", "mock", "--start", "0",
+                            "--end", "50", "--execute", "--delay", "0")
+        finally:
+            backends.build = real
+        self.assertNotEqual(code, 0)
+        self.assertIn("ABORTED", out)
+        self.assertEqual(state["n"], 3, "should stop after 3, not run all 51")
+
+    def test_isolated_failures_do_not_abort(self):
+        good = backends.MockBackend({}, {}).generate("x", None)
+        state = {"n": 0}
+
+        class EveryOther(backends.Backend):
+            name, paid, takes_reference = "flappy", False, True
+
+            def generate(self, prompt, reference_bytes):
+                state["n"] += 1
+                if state["n"] % 2 == 0:
+                    raise backends.BackendError("nope", retryable=False)
+                return good
+
+        real = backends.build
+        backends.build = lambda n, c: EveryOther({}, {})
+        try:
+            code, out = run(self.root, "--backend", "mock", "--start", "0",
+                            "--end", "5", "--execute", "--delay", "0")
+        finally:
+            backends.build = real
+        self.assertNotIn("ABORTED", out)
+
+    def test_abort_can_be_disabled(self):
+        class AlwaysFails(backends.Backend):
+            name, paid, takes_reference = "dead", False, True
+
+            def generate(self, prompt, reference_bytes):
+                raise backends.BackendError("blocked", retryable=False)
+
+        real = backends.build
+        backends.build = lambda n, c: AlwaysFails({}, {})
+        try:
+            code, out = run(self.root, "--backend", "mock", "--start", "0",
+                            "--end", "4", "--execute", "--delay", "0",
+                            "--abort-after", "0")
+        finally:
+            backends.build = real
+        self.assertNotIn("ABORTED", out)
+        self.assertIn("failed 5", out)
+
+
 class Preflight(Base):
     """Every paid backend must fail with a message naming the fix."""
 

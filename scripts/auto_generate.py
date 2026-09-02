@@ -108,7 +108,7 @@ def render_one(backend, frame, ref_bytes, out_path, args, limits):
         except backends.BackendError as e:
             last = str(e)
             if not e.retryable:
-                return False, last
+                return False, last + "  (not retryable — failed immediately)"
             if e.retry_after:
                 print("      provider asked for %.0fs" % e.retry_after)
                 time.sleep(min(e.retry_after, cap))
@@ -149,6 +149,11 @@ def main(argv=None):
                     help="re-render frames that already pass verification")
     ap.add_argument("--no-reference", action="store_true",
                     help="run without the mascot reference (invites drift)")
+    ap.add_argument("--abort-after", type=int, default=3, metavar="N",
+                    help="stop after N consecutive failures (default 3); 0 "
+                         "disables. A systemic fault — bad key, blocked host, "
+                         "wrong model id — fails identically on every frame, "
+                         "and finding that out 157 times is just waiting.")
     ap.add_argument("--list-backends", action="store_true")
     ap.add_argument("--root")
     args = ap.parse_args(argv)
@@ -253,6 +258,8 @@ def main(argv=None):
     print()
 
     done = failed = 0
+    streak = 0
+    aborted = None
     started = time.time()
     try:
         for i, f in enumerate(todo):
@@ -262,10 +269,20 @@ def main(argv=None):
             ok, detail = render_one(backend, f, ref_bytes, path, args, limits)
             if ok:
                 done += 1
+                streak = 0
                 print("      ok — %s" % detail)
             else:
                 failed += 1
+                streak += 1
                 print("      FAILED — %s" % detail)
+                if args.abort_after and streak >= args.abort_after:
+                    aborted = ("%d consecutive failures — stopping rather than "
+                               "working through the remaining %d frames with what "
+                               "looks like a systemic fault. Fix the cause and "
+                               "re-run; everything already rendered is skipped."
+                               % (streak, len(todo) - i - 1))
+                    print("\n  ABORTED: %s" % aborted)
+                    break
             if i + 1 < len(todo) and args.delay:
                 time.sleep(args.delay)
     except KeyboardInterrupt:
@@ -277,7 +294,8 @@ def main(argv=None):
 
     mins = (time.time() - started) / 60.0
     print()
-    print("rendered %d, failed %d, in %.1f min" % (done, failed, mins))
+    print("rendered %d, failed %d%s, in %.1f min"
+          % (done, failed, ", aborted early" if aborted else "", mins))
     print("verify the whole set:  python3 scripts/generate_frames.py verify")
     if failed:
         print("re-run to retry the failures; frames that verify are skipped.")
