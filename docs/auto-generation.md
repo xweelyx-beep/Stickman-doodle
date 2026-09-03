@@ -75,12 +75,13 @@ Keys are read from the environment and never written to disk.
 | `--backend` | **required** | `mock`, `gemini`, `fal`, `replicate`, `flow` |
 | `--start` | `0` | first frame |
 | `--end` | `156` | last frame, inclusive |
-| `--delay` | `3.0` | seconds between requests |
+| `--delay` | `3.0` paid, `0` free | seconds between requests |
 | `--max-retries` | `5` | retries per frame |
 | `--execute` | off | actually submit; otherwise dry run |
 | `--approve-spend N` | — | required for paid backends; must equal the real count |
 | `--regenerate` | off | re-render frames that already verify |
 | `--no-reference` | off | run without the mascot — invites drift |
+| `--abort-after N` | `3` | stop after N consecutive failures; `0` disables |
 | `--list-backends` | — | show what is configured |
 
 ## Resume
@@ -98,12 +99,30 @@ the driver reported `to render : 1 of 10 (9 already done)` and touched only
 
 ## Retry and rate limiting
 
-- **Delay** between every request, not just after a failure.
+- **Delay** between every request, not just after a failure. It defaults to
+  3 s for a paid backend and **0 for a free one** — pacing exists to stay inside
+  a provider's rate limit, and `mock` has none, so the default would otherwise
+  spend about eight minutes asleep across 157 frames for no reason. An explicit
+  `--delay` wins either way.
 - **Exponential backoff with full jitter** on retryable failures, capped at 60 s.
   Full jitter rather than fixed doubling so parallel runs do not resonate.
 - **`Retry-After` is honoured** when the provider sends one on a 429 or 503.
 - **4xx is not retried.** A malformed request fails the same way five times; the
   driver reports it and moves on rather than burning the window.
+- **Transport faults are classified, not blanket-retried.** A proxy answering
+  4xx to CONNECT, a TLS verification failure, and a hostname that does not
+  resolve all mean the request never left the machine and never will. Those fail
+  immediately. Timeouts, resets, and proxy 429/502/503 still retry, and anything
+  unrecognised defaults to retryable — a blip is likelier than a permanent
+  condition.
+- **A systemic fault stops the run.** `--abort-after N` (default 3) halts after N
+  consecutive failures. A blocked host, a bad key or a wrong model id fails
+  identically on every frame, and discovering that 157 times is just waiting.
+  `--abort-after 0` disables it.
+
+Measured on a container whose egress policy blocks `fal.run`: **2.7 minutes down
+to 7.4 seconds**, stopping at 3 frames instead of 157. The old path would have
+spent about 2.4 hours reaching the same answer.
 
 ## Validation
 
@@ -117,6 +136,31 @@ Bytes are checked **before** anything reaches disk, against the same contract
 
 A backend returning junk therefore produces a `FAILED` line, a non-zero exit, and
 no file at all.
+
+**A wrong format is never retried.** On a paid backend every retry is another
+billed generation, and a provider that returns JPEG returns JPEG every time —
+six retries buys nothing and costs six images per frame. Only a plausibly
+truncated download is retried.
+
+**The failure names the format and the fix.** A live run on 2026-08-30 returned
+JPEG and reported only `not a PNG (bad magic bytes)`. It now reads:
+
+```
+expected PNG, got JPEG (server sent Content-Type: image/jpeg).
+    FLUX and several other models default to JPEG. Set request.static.output_format
+    to "png" for this backend in scripts/config/generation.json.
+    JPEG, 6010 bytes, first 200 hex: ffd8ffe000104a464946...
+```
+
+and an error body arrives decoded rather than as hex:
+
+```
+the response is not an image — JSON, 49 bytes, first 49:
+'{"detail":"Unauthorized: invalid or expired key"}'
+```
+
+Both `fal` and `gemini` now request PNG explicitly in `generation.json`
+(`output_format` and `outputOptions.mimeType` respectively).
 
 ## The reference image
 
@@ -186,7 +230,7 @@ At 157 frames a mistake is expensive. Before any paid run:
 python3 scripts/tests/test_auto_generate.py
 ```
 
-34 tests, no network. HTTP backends are exercised through stubs; end-to-end runs
+67 tests, no network. HTTP backends are exercised through stubs; end-to-end runs
 use `mock`. They cover the spend gate, resume, retry and backoff behaviour,
 validation, the reference requirement, request shaping per provider, and that no
 default backend is configured.

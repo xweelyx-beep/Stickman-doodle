@@ -61,19 +61,43 @@ def load_config(root):
         return json.load(fh)
 
 
-def verify_bytes(data):
+def verify_bytes(data, backend=None):
     """Same contract as generate_frames.verify, applied before anything is saved.
 
-    Returns None when the bytes are a usable render, else why they are not.
+    Returns (reason, retryable), or (None, False) when the bytes are usable.
+
+    The retryable flag matters more here than anywhere else in the driver: on a
+    paid backend every retry is another billed generation. A provider that
+    returns JPEG returns JPEG every time, so retrying a format mismatch buys
+    nothing and costs six images per frame.
     """
+    ct = getattr(backend, "last_content_type", None)
+    where = (" (server sent Content-Type: %s)" % ct) if ct else ""
+
     if len(data) < gfr.MIN_BYTES:
-        return "only %d bytes (floor is %d) — probably a failed render" % (
-            len(data), gfr.MIN_BYTES)
+        fmt = backends.sniff_format(data)
+        if fmt in ("JSON", "HTML", "XML/HTML", None):
+            # A short text body is an error message, not a truncated image.
+            return ("the response is not an image%s — %s"
+                    % (where, backends.describe_bytes(data)), False)
+        # A short but real image is more likely a cut-off download.
+        return ("only %d bytes (floor is %d) — probably a truncated download%s"
+                % (len(data), gfr.MIN_BYTES, where), True)
+
     if data[:8] != gfr.PNG_MAGIC:
-        return "not a PNG (bad magic bytes)"
+        fmt = backends.sniff_format(data) or "an unrecognised format"
+        hint = ""
+        if fmt == "JPEG":
+            hint = ("\n        FLUX and several other models default to JPEG. Set "
+                    "request.static.output_format to \"png\" for this backend in "
+                    "scripts/config/generation.json.")
+        return ("expected PNG, got %s%s.%s\n        %s"
+                % (fmt, where, hint, backends.describe_bytes(data)), False)
+
     if data[12:16] != b"IHDR":
-        return "PNG header is malformed (no IHDR)"
-    return None
+        return ("PNG header is malformed (no IHDR)%s — %s"
+                % (where, backends.describe_bytes(data)), False)
+    return None, False
 
 
 def cost_line(config, backend_name, count):
@@ -108,15 +132,18 @@ def render_one(backend, frame, ref_bytes, out_path, args, limits):
         except backends.BackendError as e:
             last = str(e)
             if not e.retryable:
-                return False, last
+                return False, last + "  (not retryable — failed immediately)"
             if e.retry_after:
                 print("      provider asked for %.0fs" % e.retry_after)
                 time.sleep(min(e.retry_after, cap))
             continue
         except Exception as e:                      # a backend bug, not a refusal
             return False, "%s: %s" % (type(e).__name__, e)
-        bad = verify_bytes(data)
+        bad, bad_retryable = verify_bytes(data, backend)
         if bad:
+            if not bad_retryable:
+                return False, (bad + "  (not retryable — every retry would be "
+                               "another billed generation)")
             last = bad
             continue
         tmp = out_path + ".part"
@@ -149,6 +176,11 @@ def main(argv=None):
                     help="re-render frames that already pass verification")
     ap.add_argument("--no-reference", action="store_true",
                     help="run without the mascot reference (invites drift)")
+    ap.add_argument("--abort-after", type=int, default=3, metavar="N",
+                    help="stop after N consecutive failures (default 3); 0 "
+                         "disables. A systemic fault — bad key, blocked host, "
+                         "wrong model id — fails identically on every frame, "
+                         "and finding that out 157 times is just waiting.")
     ap.add_argument("--list-backends", action="store_true")
     ap.add_argument("--root")
     args = ap.parse_args(argv)
@@ -171,7 +203,11 @@ def main(argv=None):
                  "this script's. See --list-backends.")
 
     if args.delay is None:
-        args.delay = limits.get("delay_seconds_default", 3.0)
+        # Pacing exists to stay inside a provider's rate limit. A local backend
+        # has none, so defaulting to 3s there would spend eight minutes asleep
+        # for no reason. Still overridable with an explicit --delay.
+        paid = (config.get("backends") or {}).get(args.backend, {}).get("paid", True)
+        args.delay = limits.get("delay_seconds_default", 3.0) if paid else 0.0
     if args.max_retries is None:
         args.max_retries = limits.get("max_retries_default", 5)
     if args.delay < 0:
@@ -205,7 +241,7 @@ def main(argv=None):
         path = os.path.join(out_dir, f["filename"])
         if not args.regenerate and os.path.isfile(path):
             with open(path, "rb") as fh:
-                if verify_bytes(fh.read()) is None:
+                if verify_bytes(fh.read())[0] is None:
                     continue                        # already good — resume past it
         todo.append(f)
 
@@ -249,6 +285,8 @@ def main(argv=None):
     print()
 
     done = failed = 0
+    streak = 0
+    aborted = None
     started = time.time()
     try:
         for i, f in enumerate(todo):
@@ -258,10 +296,20 @@ def main(argv=None):
             ok, detail = render_one(backend, f, ref_bytes, path, args, limits)
             if ok:
                 done += 1
+                streak = 0
                 print("      ok — %s" % detail)
             else:
                 failed += 1
+                streak += 1
                 print("      FAILED — %s" % detail)
+                if args.abort_after and streak >= args.abort_after:
+                    aborted = ("%d consecutive failures — stopping rather than "
+                               "working through the remaining %d frames with what "
+                               "looks like a systemic fault. Fix the cause and "
+                               "re-run; everything already rendered is skipped."
+                               % (streak, len(todo) - i - 1))
+                    print("\n  ABORTED: %s" % aborted)
+                    break
             if i + 1 < len(todo) and args.delay:
                 time.sleep(args.delay)
     except KeyboardInterrupt:
@@ -273,7 +321,8 @@ def main(argv=None):
 
     mins = (time.time() - started) / 60.0
     print()
-    print("rendered %d, failed %d, in %.1f min" % (done, failed, mins))
+    print("rendered %d, failed %d%s, in %.1f min"
+          % (done, failed, ", aborted early" if aborted else "", mins))
     print("verify the whole set:  python3 scripts/generate_frames.py verify")
     if failed:
         print("re-run to retry the failures; frames that verify are skipped.")

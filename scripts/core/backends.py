@@ -26,6 +26,7 @@ import base64
 import json
 import os
 import random
+import re
 import time
 import urllib.error
 import urllib.request
@@ -98,6 +99,102 @@ def backoff_delay(attempt, base, cap):
     return random.uniform(0, min(cap, base * (2 ** attempt)))
 
 
+# A tunnel refusal carries an HTTP status. Most 4xx from a proxy mean policy,
+# which no amount of waiting changes; these few are the ones worth retrying.
+RETRYABLE_TUNNEL_CODES = (408, 425, 429, 500, 502, 503, 504)
+
+
+# Enough magic bytes to name what actually came back. "You asked for PNG and got
+# JPEG" is a fix; "bad magic bytes" is a puzzle.
+MAGIC = (
+    (b"\x89PNG\r\n\x1a\n", "PNG"),
+    (b"\xff\xd8\xff", "JPEG"),
+    (b"GIF87a", "GIF"),
+    (b"GIF89a", "GIF"),
+    (b"BM", "BMP"),
+    (b"II*\x00", "TIFF"),
+    (b"MM\x00*", "TIFF"),
+    (b"%PDF", "PDF"),
+)
+
+
+def sniff_format(data):
+    """Name the payload from its first bytes, or None if unrecognised."""
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "WEBP"
+    for magic, name in MAGIC:
+        if data.startswith(magic):
+            return name
+    head = data[:64].lstrip()[:32].lower()
+    if head.startswith(b"{") or head.startswith(b"["):
+        return "JSON"
+    if head.startswith(b"<!doctype html") or head.startswith(b"<html"):
+        return "HTML"
+    if head.startswith(b"<?xml") or head.startswith(b"<"):
+        return "XML/HTML"
+    return None
+
+
+def describe_bytes(data, limit=200):
+    """What arrived, in a form worth pasting into a bug report.
+
+    Text-ish payloads (a JSON error body, an HTML error page) are shown decoded,
+    because that is where the provider puts the actual reason. Binary payloads
+    get a hex preview.
+    """
+    fmt = sniff_format(data)
+    head = data[:limit]
+    if fmt in ("JSON", "HTML", "XML/HTML", None):
+        try:
+            text = head.decode("utf-8", "replace").strip()
+            if text:
+                return "%s, %d bytes, first %d: %r" % (
+                    fmt or "unrecognised", len(data), len(head), text)
+        except Exception:
+            pass
+    return "%s, %d bytes, first %d hex: %s" % (
+        fmt or "unrecognised", len(data), len(head), head.hex())
+
+
+def classify_urlerror(reason):
+    """(retryable, message) for a urllib URLError.
+
+    Defaults to retryable, because an unrecognised transport fault is more
+    likely a blip than a permanent condition. The named cases below are the
+    ones where retrying is provably useless: the request never reached the
+    provider, and it never will until something outside this process changes.
+
+    This exists because a proxy answering 403 to CONNECT was being treated as
+    transient. Six backoffs per frame across 157 frames is hours of waiting to
+    discover a policy that was never going to yield.
+    """
+    text = str(reason)
+    low = text.lower()
+
+    m = re.search(r"tunnel connection failed:\s*(\d{3})", low)
+    if m:
+        code = int(m.group(1))
+        if code in RETRYABLE_TUNNEL_CODES:
+            return True, "proxy tunnel returned %d" % code
+        return False, (
+            "the outbound proxy refused the connection (%d to CONNECT). That is "
+            "an egress policy where this is running — not a fault at the "
+            "provider, and not a bad key. The request never left the machine, so "
+            "retrying cannot change it. Allow the host, or run from a machine "
+            "with direct network access." % code)
+
+    if "certificate_verify_failed" in low or "certificate verify failed" in low:
+        return False, ("TLS certificate verification failed (%s). That is a trust "
+                       "store problem and will not fix itself. Do not work around "
+                       "it by disabling verification." % text)
+
+    if "name or service not known" in low or "nodename nor servname" in low:
+        return False, ("the hostname does not resolve (%s). Check the endpoint in "
+                       "scripts/config/generation.json." % text)
+
+    return True, text
+
+
 # ------------------------------------------------------------------ base
 
 class Backend(object):
@@ -108,6 +205,10 @@ class Backend(object):
     def __init__(self, cfg, limits):
         self.cfg = cfg
         self.limits = limits
+        # Set by HTTP backends on each download so a format mismatch can be
+        # reported with the server's own Content-Type rather than a guess.
+        self.last_content_type = None
+        self.last_url = None
 
     def preflight(self):
         return
@@ -241,8 +342,11 @@ class HTTPBackend(Backend):
                 retryable=e.code in (408, 409, 425, 429, 500, 502, 503, 504),
                 retry_after=retry_after)
         except urllib.error.URLError as e:
-            raise BackendError("network error talking to %s: %s"
-                               % (self.name, e.reason), retryable=True)
+            retryable, detail = classify_urlerror(e.reason)
+            raise BackendError(
+                ("network error talking to %s: %s" % (self.name, detail))
+                if retryable else detail,
+                retryable=retryable)
         except json.JSONDecodeError:
             raise BackendError("%s returned a non-JSON body" % self.name,
                                retryable=True)
@@ -254,10 +358,21 @@ class HTTPBackend(Backend):
         try:
             with urllib.request.urlopen(
                     req, timeout=self.limits.get("request_timeout_seconds", 180)) as r:
-                return r.read()
-        except (urllib.error.HTTPError, urllib.error.URLError) as e:
-            raise BackendError("could not download the result: %s" % e,
-                               retryable=True)
+                data = r.read()
+                # Remember what the server said it was sending. When the bytes
+                # turn out not to be a PNG, this is the first thing worth
+                # knowing, and it is gone by the time the caller notices.
+                self.last_content_type = r.headers.get("Content-Type") or "unset"
+                self.last_url = url
+                return data
+        except urllib.error.HTTPError as e:
+            raise BackendError(
+                "could not download the result: HTTP %s" % e.code,
+                retryable=e.code in (408, 409, 425, 429, 500, 502, 503, 504))
+        except urllib.error.URLError as e:
+            retryable, detail = classify_urlerror(e.reason)
+            raise BackendError("could not download the result: %s" % detail,
+                               retryable=retryable)
 
     def _poll(self, payload):
         resp = self.cfg["response"]

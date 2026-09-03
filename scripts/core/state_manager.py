@@ -66,6 +66,7 @@ EPISODE_FILES = {
     "video_prompts": "03_kie_video_prompts.json",
     "thumbnail_prompts": "04_kie_thumbnail_prompts.md",
     "metadata": "05_metadata.md",
+    "metadata_json": "metadata.json",
     "state": "state.json",
 }
 
