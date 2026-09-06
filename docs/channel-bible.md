@@ -245,8 +245,10 @@ runtime**, structured as:
 Topic roadmap (locked STATE 5, 8 compulsions): Nail Biting/Dermatophagia
 (Ep. 1) → Compulsive Phone-Checking → Skin Picking/Excoriation → Procrastination
 → Compulsive Lying/Self-Deception → Doomscrolling → Overeating/Sugar Craving
-(⚠ flagged for a Lilweid-calendar collision check before its week is fixed) →
-Compulsive Comparison. **Non-negotiable production rule:** strictly
+(checked 2026-09-06 against the Business repo — Lilweid has no fixed
+cadence, no episodes, and empty topic history, so no real collision exists
+today; re-check before the week actually publishes, since Lilweid's slots
+are assigned by hand) → Compulsive Comparison. **Non-negotiable production rule:** strictly
 mechanism-focused (evolutionary neuroscience/behavioral circuitry), zero
 moralizing, resolution must be actionable — this is the operative form of the
 Lilweid boundary test in section 3, not a separate rule.

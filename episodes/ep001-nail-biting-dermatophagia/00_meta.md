@@ -57,10 +57,11 @@ text: center-weighted, bottom-third safe-zone, clear of platform UI overlays.
 2. **Clip 35's VO** runs 5.12s against a 5.0s clip nominal (0.12s over) —
    accepted as within normal tolerance; flag if the actual render tool
    enforces a strict 5.00s cap with zero tolerance.
-3. **Week 7 scheduling** (a *different* episode, Overeating/Sugar Craving)
-   needs a cross-check against Lilweid's actual publish calendar
-   (`automation/config/schedule.json` in the Business repo) before that
-   week is hard-locked — this repo doesn't have that file.
+3. **Week 7 scheduling audit — done, real result:** checked directly against
+   the Business repo (2026-09-06). Lilweid has no fixed cadence, no episodes,
+   and empty topic history — no actual collision exists today. Downgraded
+   from a blocker to a standing watch-item since Lilweid's slots are assigned
+   by hand; see `06_ab_testing_and_calendar.md` for the full audit.
 4. **Render tool choice** — not made. Per the standing rule, the paid tool
    (Seedance for clips, Flux/GPT-Image for thumbnails, ElevenLabs for voice)
    is the operator's pick, asked for before any spend.
