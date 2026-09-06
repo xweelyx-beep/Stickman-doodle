@@ -42,16 +42,13 @@ Real, from the operator. Not a pattern to lock, just the record.
 
 | # | Title | State |
 |---|---|---|
-| 1 | Can't stop eating Sugar | Finished, unpublished |
-| 2 | Can't stop checking your phone | Nearly done |
+| 1 | Can't stop eating Sugar | Finished, unpublished (pre-pivot legacy episode — footage on the unreachable Windows drive, not yet analyzed) |
+| 2 | Can't stop checking your phone | Nearly done (pre-pivot legacy episode) |
+| Ep. 1 (new roadmap) | "Your Brain Is Wired Wrong (Not Broken)" — Nail Biting/Dermatophagia | Script, scene prompts, motion prompts, thumbnails and SEO package locked 2026-09-06; see `episodes/ep001-nail-biting-dermatophagia/`. Render/publish not yet done. |
 
-The operator states the shared "Can't stop [X]" shape is **coincidence, not a
-format**. It is not canon and must not be treated as one.
-
-**But it is a decision waiting to be made.** Two consecutive episodes about
-compulsions is a series identity forming by accident. Before episode three,
-choose deliberately: lean in and make compulsions the lane, or diversify now
-while it is still cheap. Raise this rather than letting it settle by default.
+The operator originally called the shared "Can't stop [X]" shape **coincidence,
+not a format** — that question is now resolved: section 8's 8-compulsion
+roadmap makes it the deliberate lane, superseding this note.
 
 ## 3. The boundary against Lilweid
 
@@ -73,13 +70,16 @@ doing, it is not ready.
 
 ## 4. Naming
 
-`[TBD]` — the channel has no name. Nothing here should imply one, and
-`channel-stickman` is a working label for this skill file, not a proposal.
+**Locked: "Wired Wrong."** Chosen 2026-09-06 from a 10-concept shortlist, by
+operator decision after a 5-member council review. Frames every compulsion as
+a wiring/mechanism issue — directly reinforces the mechanism-versus-meaning
+boundary against Lilweid in section 3. `references/brand.json` marks the
+`name` gate item done.
 
-When naming, the constraints already known: it must not collide with Lilweid or
-Known Unknowns in feel, it must survive a mascot-led brand, and it must fit a
-channel whose subject is practical rather than philosophical. Ask before
-generating candidates; a name is the operator's decision, not a derived fact.
+The constraints that shaped the pick: must not collide with Lilweid or Known
+Unknowns in feel, must survive a mascot-led brand, must fit a channel whose
+subject is practical rather than philosophical. The `@handle` (identifier_name
+in `brand.json`) is still open.
 
 ## 5. The mascot *(locked from the operator's reference image)*
 
@@ -129,25 +129,92 @@ hoodie colour without an explicit wardrobe change instruction.
 **Negative:** plain stick figure, circle head, bare hands, five fingers, nose,
 ears, visible joints, photoreal, 3D render, sketch, doodle, outline-only.
 
-`[TBD]` — expression sheet, side and rear views, and walk cycle. Generate a
-3-panel character sheet from the reference before episode three, so later
-prompts have a real turnaround to reference rather than words alone.
+**Expression chart locked** (section 6 / `references/character-sheet.md`) — six
+video expressions plus a thumbnail-only hyper-expression tier, all built from
+eye/brow/mouth variation within the traits above. Still `[TBD]`: the **drawn**
+3-panel character sheet (front/rear/face-lock), side and rear views, and walk
+cycle — the written lock above is canon, the turnaround art is not. Generate
+it from the reference before episode three, so later prompts have a real
+image turnaround rather than words alone.
 
-## 6. Visual system `[BLOCKED]`
+## 6. Visual system — **locked 2026-09-06, superseding the wait-for-footage plan**
 
-To extract from the footage: palette and background treatment, line weight,
-text-on-screen style and typography, transition vocabulary, how diagrams and
-numbers are drawn, camera behaviour if any, and the pacing in seconds per beat.
+**Pivot note, stated plainly per the "a contradiction beats a quiet patch"
+rule:** this section was originally going to be filled in only by scene-analysing
+the two pre-existing unreachable episodes. The operator instead directed a
+deliberate style pivot — modeling Zenn's narrative rhythm and Rico Animations'
+visual energy — and locked a full visual system from that benchmark session
+before any footage became reachable. The two original episodes are now
+**legacy assets**, not the source of truth for this system; if they ever
+become reachable, treat them as a style-continuity question to resolve
+deliberately, not as an automatic override of the lock below.
 
-For comparison once measured — the other two channels sit at **4.7s per scene**
-(Lilweid) and **8.3s per scene** (Known Unknowns). A modern explainer channel
-would be expected to run faster than both, but that is an expectation, not a
-measurement, and must not be written in as a lock.
+**Palette:**
 
-## 7. Voice `[BLOCKED]`
+| Role | Hex |
+|---|---|
+| Scene background (episodes only — see character-sheet.md for the separate reference-sheet backdrop) | `#0F172A` (Deep Slate) → `#1E293B` (Charcoal), 2-tone gradient, no texture |
+| Hoodie | `#2563EB` base / `#1D4ED8` shadow |
+| Head / gloves | `#F8FAFC` |
+| Outline (all linework) | `#0B0F19` |
+| Trousers | `#334155` |
+| Sneakers / soles | `#F1F5F9` / `#64748B` |
+| Accent (neural cues, glitches, diagrams — sparingly, never a mascot fill) | `#22D3EE` Electric Cyan / `#FBBF24` Warning Amber |
 
-To extract: register, pace, sentence length, how the narrator addresses the
-viewer, and whether it uses humour.
+**Line weight & shading:** 7px uniform outline stroke at 1080p reference
+height (~0.65% of canvas height, scaled proportionally for 9:16 vs 16:9).
+Flat 2-tone cel shading only — one base fill, one shadow tone per color, hard
+edge, zero gradient on the character. Gradient is permitted on the background
+only.
+
+**Expression system:** six locked expressions (Neutral/Explaining,
+Startled/Surprised, Anxious/Tense, Mischievous/Realization, Determined/Clenched,
+Relieved/Confident), built from eye/brow/mouth variation only — the mascot has
+no nose or ears to work with. A seventh, thumbnail-only **hyper-expression**
+tier exists for higher salience than any in-video frame (wider eyes, sharper
+brows, more open mouth than the video-expression ceiling) — see
+`references/character-sheet.md` for the full chart.
+
+**Camera & pacing (house production method, section 9, stays the technical
+constraint — 5-second clips, 3 per 15s block):** clip *content* groups
+narration beats to land near a 3.5–4.0s average editorial beat-change rate
+inside that 5s ceiling, using the required motion (slow push-in / slow
+pull-back / slow tilt-up / gentle drift) to carry a beat transition within one
+continuous clip rather than an internal cut. Two motion conventions are now
+canon, not one-off choices:
+- **Push-in = building tension, pull-back = releasing it** — used consistently
+  wherever the script pairs a tension beat with its release.
+- **The three retention pivots ("but that's not the whole story" and its two
+  variants) always render as an Extreme Close-Up on the eyes only, with a
+  single-frame Electric Cyan flicker, pulling back to reveal the wider shot** —
+  identical treatment across all three uses in an episode, a visual signature
+  for the pivot itself.
+- **Diagram/accent inserts use thick, simple, bold-line shapes for thumbnails**
+  but thin delicate line-art for in-episode diagram cutaways — the two do not
+  share a spec, because thin linework does not survive thumbnail compression
+  at mobile scale.
+
+For comparison, the sibling channels sit at **4.7s per scene** (Lilweid) and
+**8.3s per scene** (Known Unknowns); Rico Animations, benchmarked directly via
+real scene analysis (not assumption), measured **3.0s average scene length**
+across 13 scenes. Wired Wrong's 3.5–4.0s target sits deliberately between the
+two, protecting the locked mascot's visual fidelity from Rico's faster cut rate
+while still running well ahead of both existing channels.
+
+## 7. Voice — **narrative pacing locked, narrator/TTS still `[BLOCKED]`**
+
+Split lock, stated precisely rather than marking the whole section done:
+
+- **Locked (2026-09-06):** narration pace target of **~3.0–3.2 WPS**, matched
+  to Zenn's measured rate (real transcript analysis: 1,290 words / 414s =
+  3.12 WPS — not the ~2.35 WPS originally assumed, corrected after an actual
+  word count). Sentence rhythm alternates short declaratives against longer
+  compound explanatory sentences. Every mechanism claim pairs one named
+  researcher with one concrete, visualizable study — never an abstract claim
+  alone.
+- **Still open:** register (how warm/dry the narrator reads), and the actual
+  narration tool. The `Eva` ElevenLabs voice recorded below stays
+  `locked: false` — nothing in this session changes that.
 
 **Sign-off.** Known Unknowns ends on `"You're welcome."` Lilweid ends on an
 aphorism. This channel needs its own, and it must not borrow either. Note that
@@ -159,12 +226,32 @@ first, with ElevenLabs as fallback and a voice chosen per channel. Per the
 repo's standing rule, the paid tool is never Claude's choice: present options
 with costs and wait.
 
-## 8. Episode architecture `[BLOCKED]`
+## 8. Episode architecture — **locked 2026-09-06**
 
-To extract from the finished episode. The other two channels each turned out to
-have a strict repeatable beat structure, six and nine beats respectively. Assume
-this one does too and read it off the footage rather than imposing a generic
-explainer template.
+Long-form beat structure, verified against Episode 1 (Nail Biting/
+Dermatophagia): **~450–550 words, ~45–55 sequential beats, 2.5–3 min
+runtime**, structured as:
+
+1. Cold open — 2nd-person direct address, immediate false-answer strip (no
+   channel intro).
+2. Independent mechanism reveals (3–4 of them), escalating, never repeating an
+   explanation type, each paired with a named researcher + concrete study.
+3. Exactly **3** false-summit retention pivots ("that's not the whole story"
+   and its variants), interleaved between the mechanism reveals.
+4. Resolution: names the specific circuit-level fix, with a concrete
+   instruction — never generic willpower advice.
+5. Closing callback — a hard bookend to the cold open's opening image/line.
+
+Topic roadmap (locked STATE 5, 8 compulsions): Nail Biting/Dermatophagia
+(Ep. 1) → Compulsive Phone-Checking → Skin Picking/Excoriation → Procrastination
+→ Compulsive Lying/Self-Deception → Doomscrolling → Overeating/Sugar Craving
+(checked 2026-09-06 against the Business repo — Lilweid has no fixed
+cadence, no episodes, and empty topic history, so no real collision exists
+today; re-check before the week actually publishes, since Lilweid's slots
+are assigned by hand) → Compulsive Comparison. **Non-negotiable production rule:** strictly
+mechanism-focused (evolutionary neuroscience/behavioral circuitry), zero
+moralizing, resolution must be actionable — this is the operative form of the
+Lilweid boundary test in section 3, not a separate rule.
 
 ## 9. The house production method *(recovered from the KIE pipeline branch)*
 
@@ -205,11 +292,17 @@ through 8, and replace every `[BLOCKED]` marker with a verified lock.
 
 ## 11. When this skill is active
 
-1. State plainly that this canon is provisional and which sections are blocked.
-2. Never fill a `[BLOCKED]` section from imagination. Ask for the footage.
+1. State plainly which sections remain genuinely blocked — as of 2026-09-06
+   that's just the narrator/TTS choice in section 7. Naming, visual system,
+   and episode architecture are locked.
+2. Never fill a still-`[BLOCKED]` section from imagination. For voice, that
+   means: don't pick a narrator tone or finalize the TTS voice without the
+   operator.
 3. Apply the Lilweid boundary test to any topic that could belong to either
    channel, and say which channel wins and why.
-4. Flag the compulsion-format decision if a third episode is being planned.
+4. The compulsion-format decision is resolved: it's the lane, not a
+   coincidence. The section 2 "coincidence, not a format" framing is
+   superseded by the section 8 roadmap.
 5. When paired with `banana-pro-director` or `cinema-worldbuilder-pro-30`,
    supply the mascot as an image reference rather than a written description
-   until its design is locked.
+   until the 3-panel character sheet (still `[TBD]`, see section 5) exists.

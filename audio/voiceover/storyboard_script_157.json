@@ -1,0 +1,787 @@
+[
+ {
+  "frame": 0,
+  "timestamp": "00:00",
+  "text": "It's late. You're not bored, exactly. And your hand is already moving."
+ },
+ {
+  "frame": 1,
+  "timestamp": "00:03",
+  "text": "You didn't decide to do that."
+ },
+ {
+  "frame": 2,
+  "timestamp": "00:05",
+  "text": "The thought you were having never finished."
+ },
+ {
+  "frame": 3,
+  "timestamp": "00:09",
+  "text": "Forty minutes later, you couldn't name one thing you saw."
+ },
+ {
+  "frame": 4,
+  "timestamp": "00:21",
+  "text": "You've been told this is a discipline problem."
+ },
+ {
+  "frame": 5,
+  "timestamp": "00:24",
+  "text": "Weak will. Short attention span. Something wrong with you."
+ },
+ {
+  "frame": 6,
+  "timestamp": "00:26",
+  "text": "So you try harder. You white-knuckle it."
+ },
+ {
+  "frame": 7,
+  "timestamp": "00:28",
+  "text": "And it doesn't work. Which should tell you the diagnosis is wrong."
+ },
+ {
+  "frame": 8,
+  "timestamp": "00:32",
+  "text": "The problem isn't the phone."
+ },
+ {
+  "frame": 9,
+  "timestamp": "00:35",
+  "text": "It isn't the apps either."
+ },
+ {
+  "frame": 10,
+  "timestamp": "00:41",
+  "text": "What's happening to you is much older than any of them."
+ },
+ {
+  "frame": 11,
+  "timestamp": "00:44",
+  "text": "It's machinery. And it was mapped in a laboratory, decades before the first smartphone."
+ },
+ {
+  "frame": 12,
+  "timestamp": "00:56",
+  "text": "You are not weak."
+ },
+ {
+  "frame": 13,
+  "timestamp": "00:58",
+  "text": "You are being operated. Here is the mechanism."
+ },
+ {
+  "frame": 14,
+  "timestamp": "01:01",
+  "text": "The nineteen-thirties. A research laboratory, and a pigeon."
+ },
+ {
+  "frame": 15,
+  "timestamp": "01:09",
+  "text": "The psychologist is B. F. Skinner."
+ },
+ {
+  "frame": 16,
+  "timestamp": "01:11",
+  "text": "The box is simple enough to explain in one sentence."
+ },
+ {
+  "frame": 17,
+  "timestamp": "01:12",
+  "text": "Inside, a lever. Press it, and a pellet of food drops into the tray."
+ },
+ {
+  "frame": 18,
+  "timestamp": "01:17",
+  "text": "Press, eat. The bird learns it in an afternoon."
+ },
+ {
+  "frame": 19,
+  "timestamp": "01:18",
+  "text": "Then Skinner starts changing the rules."
+ },
+ {
+  "frame": 20,
+  "timestamp": "01:23",
+  "text": "Version one pays every single time."
+ },
+ {
+  "frame": 21,
+  "timestamp": "01:25",
+  "text": "Lever, arrow, pellet. Perfectly reliable."
+ },
+ {
+  "frame": 22,
+  "timestamp": "01:28",
+  "text": "Every press. Every time. No exceptions."
+ },
+ {
+  "frame": 23,
+  "timestamp": "01:30",
+  "text": "And the pigeon gets bored."
+ },
+ {
+  "frame": 24,
+  "timestamp": "01:35",
+  "text": "It eats what it needs and it stops. A guaranteed reward is a boring reward."
+ },
+ {
+  "frame": 25,
+  "timestamp": "01:40",
+  "text": "So Skinner flips one switch."
+ },
+ {
+  "frame": 26,
+  "timestamp": "01:42",
+  "text": "Now the lever pays sometimes. And sometimes it pays nothing."
+ },
+ {
+  "frame": 27,
+  "timestamp": "01:44",
+  "text": "No pattern the bird can learn."
+ },
+ {
+  "frame": 28,
+  "timestamp": "01:47",
+  "text": "Not on a schedule."
+ },
+ {
+  "frame": 29,
+  "timestamp": "01:48",
+  "text": "Not on a count."
+ },
+ {
+  "frame": 30,
+  "timestamp": "01:51",
+  "text": "Just — sometimes."
+ },
+ {
+  "frame": 31,
+  "timestamp": "01:53",
+  "text": "And what the pigeon does next is the finding that made his name."
+ },
+ {
+  "frame": 32,
+  "timestamp": "01:57",
+  "text": "It presses."
+ },
+ {
+  "frame": 33,
+  "timestamp": "01:59",
+  "text": "And presses. And presses."
+ },
+ {
+  "frame": 34,
+  "timestamp": "02:02",
+  "text": "Not a little more than before. Vastly more."
+ },
+ {
+  "frame": 35,
+  "timestamp": "02:06",
+  "text": "Long past hunger. Long after the tray stopped filling."
+ },
+ {
+  "frame": 36,
+  "timestamp": "02:09",
+  "text": "Skinner called it a variable ratio schedule."
+ },
+ {
+  "frame": 37,
+  "timestamp": "02:12",
+  "text": "It is the most powerful reinforcement pattern he ever found."
+ },
+ {
+  "frame": 38,
+  "timestamp": "02:18",
+  "text": "Not the biggest reward."
+ },
+ {
+  "frame": 39,
+  "timestamp": "02:20",
+  "text": "Not the most frequent one."
+ },
+ {
+  "frame": 40,
+  "timestamp": "02:22",
+  "text": "The most uncertain one."
+ },
+ {
+  "frame": 41,
+  "timestamp": "02:24",
+  "text": "You are holding one."
+ },
+ {
+  "frame": 42,
+  "timestamp": "02:27",
+  "text": "For decades the finding sat there, a curiosity about birds."
+ },
+ {
+  "frame": 43,
+  "timestamp": "02:30",
+  "text": "Then the brain scanners arrived, and somebody looked inside."
+ },
+ {
+  "frame": 44,
+  "timestamp": "02:38",
+  "text": "Wolfram Schultz, the nineteen-nineties, recording single neurons."
+ },
+ {
+  "frame": 45,
+  "timestamp": "02:47",
+  "text": "The chemical he is watching is dopamine."
+ },
+ {
+  "frame": 46,
+  "timestamp": "02:50",
+  "text": "You have heard it called the pleasure chemical."
+ },
+ {
+  "frame": 47,
+  "timestamp": "02:52",
+  "text": "That is wrong. Not simplified. Wrong."
+ },
+ {
+  "frame": 48,
+  "timestamp": "02:57",
+  "text": "Schultz gives a monkey a piece of fruit. Dopamine spikes."
+ },
+ {
+  "frame": 49,
+  "timestamp": "03:02",
+  "text": "Exactly what you would predict."
+ },
+ {
+  "frame": 50,
+  "timestamp": "03:05",
+  "text": "Then he adds a signal before the fruit. A light. A tone."
+ },
+ {
+  "frame": 51,
+  "timestamp": "03:11",
+  "text": "A few repetitions, and the monkey knows what the light means."
+ },
+ {
+  "frame": 52,
+  "timestamp": "03:15",
+  "text": "Now watch the fruit arrive. Dopamine does nothing."
+ },
+ {
+  "frame": 53,
+  "timestamp": "03:19",
+  "text": "The spike has moved. It fires at the light."
+ },
+ {
+  "frame": 54,
+  "timestamp": "03:22",
+  "text": "Not at the reward. At the thing that predicts the reward."
+ },
+ {
+  "frame": 55,
+  "timestamp": "03:23",
+  "text": "The moment it became certain, the chemical stopped responding."
+ },
+ {
+  "frame": 56,
+  "timestamp": "03:27",
+  "text": "So dopamine is not the chemical of getting."
+ },
+ {
+  "frame": 57,
+  "timestamp": "03:30",
+  "text": "It is the chemical of predicting."
+ },
+ {
+  "frame": 58,
+  "timestamp": "03:33",
+  "text": "And it lives in the space between the signal and the thing itself."
+ },
+ {
+  "frame": 59,
+  "timestamp": "03:42",
+  "text": "Which is why a present you already know about is a formality."
+ },
+ {
+  "frame": 60,
+  "timestamp": "03:46",
+  "text": "And one still wrapped is electric."
+ },
+ {
+  "frame": 61,
+  "timestamp": "03:49",
+  "text": "Schultz's lab pushed the question one step further."
+ },
+ {
+  "frame": 62,
+  "timestamp": "03:55",
+  "text": "Fiorillo, Schultz and Tobler asked what uncertainty itself does."
+ },
+ {
+  "frame": 63,
+  "timestamp": "04:01",
+  "text": "A signal that pays every time. Reliable."
+ },
+ {
+  "frame": 64,
+  "timestamp": "04:04",
+  "text": "A signal that never pays. Also reliable."
+ },
+ {
+  "frame": 65,
+  "timestamp": "04:07",
+  "text": "And a signal that pays half the time."
+ },
+ {
+  "frame": 66,
+  "timestamp": "04:11",
+  "text": "The dopamine response peaks at fifty percent."
+ },
+ {
+  "frame": 67,
+  "timestamp": "04:16",
+  "text": "Not at guaranteed."
+ },
+ {
+  "frame": 68,
+  "timestamp": "04:18",
+  "text": "Not at generous."
+ },
+ {
+  "frame": 69,
+  "timestamp": "04:20",
+  "text": "At maybe. The strongest signal your reward system makes is a maybe."
+ },
+ {
+  "frame": 70,
+  "timestamp": "04:23",
+  "text": "This circuit is not built for enjoying. It is built for wanting."
+ },
+ {
+  "frame": 71,
+  "timestamp": "04:31",
+  "text": "Certainty is quiet. It has nothing left to chase."
+ },
+ {
+  "frame": 72,
+  "timestamp": "04:33",
+  "text": "A known reward barely moves the needle."
+ },
+ {
+  "frame": 73,
+  "timestamp": "04:36",
+  "text": "An unknown one pins it."
+ },
+ {
+  "frame": 74,
+  "timestamp": "04:39",
+  "text": "The neuroscientist Robert Sapolsky puts it plainly."
+ },
+ {
+  "frame": 75,
+  "timestamp": "04:49",
+  "text": "Dopamine is not about the reward."
+ },
+ {
+  "frame": 76,
+  "timestamp": "04:52",
+  "text": "It is about the pursuit of the reward."
+ },
+ {
+  "frame": 77,
+  "timestamp": "04:54",
+  "text": "A system with no finish line. Built to keep you running."
+ },
+ {
+  "frame": 78,
+  "timestamp": "05:01",
+  "text": "So. Your kitchen counter. Your hand closing around your phone."
+ },
+ {
+  "frame": 79,
+  "timestamp": "05:05",
+  "text": "You do not know what is on it. That is the entire point."
+ },
+ {
+  "frame": 80,
+  "timestamp": "05:06",
+  "text": "The lever and the phone are the same machine."
+ },
+ {
+  "frame": 81,
+  "timestamp": "05:09",
+  "text": "Sometimes you pull it and there is a message from someone you like."
+ },
+ {
+  "frame": 82,
+  "timestamp": "05:13",
+  "text": "Sometimes there is nothing at all."
+ },
+ {
+  "frame": 83,
+  "timestamp": "05:15",
+  "text": "Sometimes it is news that changes your afternoon."
+ },
+ {
+  "frame": 84,
+  "timestamp": "05:17",
+  "text": "And mostly it is nine things you have already seen."
+ },
+ {
+  "frame": 85,
+  "timestamp": "05:21",
+  "text": "Variable ratio. You are the pigeon, and the lever is in your pocket."
+ },
+ {
+  "frame": 86,
+  "timestamp": "05:24",
+  "text": "Dozens of times a day. Most of them you will not remember."
+ },
+ {
+  "frame": 87,
+  "timestamp": "05:26",
+  "text": "And none of this is an accident."
+ },
+ {
+  "frame": 88,
+  "timestamp": "05:31",
+  "text": "The anthropologist Natasha Dow Schull spent fifteen years in Las Vegas."
+ },
+ {
+  "frame": 89,
+  "timestamp": "05:38",
+  "text": "Studying the machines, and the people sitting at them."
+ },
+ {
+  "frame": 90,
+  "timestamp": "05:45",
+  "text": "A modern slot machine is the most refined version of Skinner's box ever built."
+ },
+ {
+  "frame": 91,
+  "timestamp": "05:49",
+  "text": "It is not a game of chance."
+ },
+ {
+  "frame": 92,
+  "timestamp": "05:56",
+  "text": "It is a precision instrument, tuned against human reward circuitry."
+ },
+ {
+  "frame": 93,
+  "timestamp": "06:02",
+  "text": "Every element is deliberate."
+ },
+ {
+  "frame": 94,
+  "timestamp": "06:04",
+  "text": "Speed, so the next pull is always seconds away."
+ },
+ {
+  "frame": 95,
+  "timestamp": "06:06",
+  "text": "Near misses. Two sevens and a third one notch off, engineered in."
+ },
+ {
+  "frame": 96,
+  "timestamp": "06:11",
+  "text": "Payouts smaller than the stake, dressed up to feel like winning."
+ },
+ {
+  "frame": 97,
+  "timestamp": "06:17",
+  "text": "And no natural stopping point anywhere in the design."
+ },
+ {
+  "frame": 98,
+  "timestamp": "06:24",
+  "text": "Schull's players described a state they called the machine zone."
+ },
+ {
+  "frame": 99,
+  "timestamp": "06:28",
+  "text": "Not excitement."
+ },
+ {
+  "frame": 100,
+  "timestamp": "06:29",
+  "text": "Not even enjoyment."
+ },
+ {
+  "frame": 101,
+  "timestamp": "06:31",
+  "text": "A flat, timeless absorption where the room goes away."
+ },
+ {
+  "frame": 102,
+  "timestamp": "06:40",
+  "text": "They were not playing to win."
+ },
+ {
+  "frame": 103,
+  "timestamp": "06:44",
+  "text": "They were playing to stay in it, until the money ran out."
+ },
+ {
+  "frame": 104,
+  "timestamp": "06:50",
+  "text": "Now look at the thing in your hand."
+ },
+ {
+  "frame": 105,
+  "timestamp": "06:53",
+  "text": "The feed has no bottom. It cannot be finished."
+ },
+ {
+  "frame": 106,
+  "timestamp": "06:58",
+  "text": "Pull down to refresh. That is a lever. That is the same gesture."
+ },
+ {
+  "frame": 107,
+  "timestamp": "07:05",
+  "text": "The badge that might be anything."
+ },
+ {
+  "frame": 108,
+  "timestamp": "07:10",
+  "text": "The half second of loading that exists to make you wait."
+ },
+ {
+  "frame": 109,
+  "timestamp": "07:17",
+  "text": "Tristan Harris, who worked on this from the inside, says it directly."
+ },
+ {
+  "frame": 110,
+  "timestamp": "07:26",
+  "text": "Every time you check your phone, you are pulling a slot machine handle."
+ },
+ {
+  "frame": 111,
+  "timestamp": "07:32",
+  "text": "This is not a side effect. It is the design."
+ },
+ {
+  "frame": 112,
+  "timestamp": "07:35",
+  "text": "The difference is that the casino stayed in Nevada."
+ },
+ {
+  "frame": 113,
+  "timestamp": "07:44",
+  "text": "This one is in six billion pockets. So what does it cost?"
+ },
+ {
+  "frame": 114,
+  "timestamp": "07:46",
+  "text": "Gloria Mark has been measuring that for over twenty years."
+ },
+ {
+  "frame": 115,
+  "timestamp": "07:55",
+  "text": "Not by asking people how distracted they feel."
+ },
+ {
+  "frame": 116,
+  "timestamp": "07:57",
+  "text": "By recording screens and timing every switch of attention."
+ },
+ {
+  "frame": 117,
+  "timestamp": "08:05",
+  "text": "In two thousand four, the average was two and a half minutes on one screen."
+ },
+ {
+  "frame": 118,
+  "timestamp": "08:14",
+  "text": "Then it fell."
+ },
+ {
+  "frame": 119,
+  "timestamp": "08:19",
+  "text": "And it kept falling."
+ },
+ {
+  "frame": 120,
+  "timestamp": "08:21",
+  "text": "Today it is a fraction of that."
+ },
+ {
+  "frame": 121,
+  "timestamp": "08:26",
+  "text": "Forty-seven seconds. Under a minute, on anything."
+ },
+ {
+  "frame": 122,
+  "timestamp": "08:28",
+  "text": "And attention is not free to move."
+ },
+ {
+  "frame": 123,
+  "timestamp": "08:33",
+  "text": "Every switch costs you something on the way back."
+ },
+ {
+  "frame": 124,
+  "timestamp": "08:37",
+  "text": "The thread you were holding comes back in pieces."
+ },
+ {
+  "frame": 125,
+  "timestamp": "08:50",
+  "text": "Her people showed measurably higher stress the more they switched."
+ },
+ {
+  "frame": 126,
+  "timestamp": "08:52",
+  "text": "It is not only that you get less done."
+ },
+ {
+  "frame": 127,
+  "timestamp": "08:54",
+  "text": "It is that the switching itself is doing something to you."
+ },
+ {
+  "frame": 128,
+  "timestamp": "09:00",
+  "text": "And here is the part that took me longest to accept."
+ },
+ {
+  "frame": 129,
+  "timestamp": "09:03",
+  "text": "None of this is about the content."
+ },
+ {
+  "frame": 130,
+  "timestamp": "09:05",
+  "text": "The videos are not that good. You know they are not."
+ },
+ {
+  "frame": 131,
+  "timestamp": "09:16",
+  "text": "Most of what you scroll past leaves nothing behind."
+ },
+ {
+  "frame": 132,
+  "timestamp": "09:17",
+  "text": "You come away with nothing you would name if I asked."
+ },
+ {
+  "frame": 133,
+  "timestamp": "09:19",
+  "text": "And four minutes later you reach for it again."
+ },
+ {
+  "frame": 134,
+  "timestamp": "09:24",
+  "text": "Because the reward was never the content."
+ },
+ {
+  "frame": 135,
+  "timestamp": "09:28",
+  "text": "The reward is the not knowing. The gap before you look."
+ },
+ {
+  "frame": 136,
+  "timestamp": "09:30",
+  "text": "Which is why closing the app does not help very much."
+ },
+ {
+  "frame": 137,
+  "timestamp": "09:34",
+  "text": "Lamp and fruit. Lever and pellet. Phone and notification. One gap, three costumes."
+ },
+ {
+  "frame": 138,
+  "timestamp": "09:49",
+  "text": "And that gap is not a flaw. It kept your ancestors alive."
+ },
+ {
+  "frame": 139,
+  "timestamp": "09:52",
+  "text": "A sound in the grass. Food, or something hunting you."
+ },
+ {
+  "frame": 140,
+  "timestamp": "10:00",
+  "text": "The one who went and looked, ate. The one who did not, did not."
+ },
+ {
+  "frame": 141,
+  "timestamp": "10:03",
+  "text": "Chasing an uncertain reward was survival."
+ },
+ {
+  "frame": 142,
+  "timestamp": "10:06",
+  "text": "It is the same circuit. Exactly the same one."
+ },
+ {
+  "frame": 143,
+  "timestamp": "10:15",
+  "text": "Built for a world where looking cost you a walk across a plain."
+ },
+ {
+  "frame": 144,
+  "timestamp": "10:21",
+  "text": "Not one where the answer is always three inches away."
+ },
+ {
+  "frame": 145,
+  "timestamp": "10:23",
+  "text": "So drop the idea that this is a character flaw."
+ },
+ {
+  "frame": 146,
+  "timestamp": "10:28",
+  "text": "You cannot out-discipline a system tuned by billions of dollars."
+ },
+ {
+  "frame": 147,
+  "timestamp": "10:40",
+  "text": "What you can do is smaller, and it works. Name the mechanism while it is running."
+ },
+ {
+  "frame": 148,
+  "timestamp": "10:44",
+  "text": "Catch your own hand on the way to your pocket, and say what is happening."
+ },
+ {
+  "frame": 149,
+  "timestamp": "10:53",
+  "text": "That is the lever."
+ },
+ {
+  "frame": 150,
+  "timestamp": "10:55",
+  "text": "That is the maybe."
+ },
+ {
+  "frame": 151,
+  "timestamp": "10:57",
+  "text": "Old circuit. New lever."
+ },
+ {
+  "frame": 152,
+  "timestamp": "11:08",
+  "text": "You will not uninstall it. It is not going anywhere."
+ },
+ {
+  "frame": 153,
+  "timestamp": "11:11",
+  "text": "But a mechanism you can see is a mechanism you can argue with."
+ },
+ {
+  "frame": 154,
+  "timestamp": "11:16",
+  "text": "So. It is late, and your hand is already moving."
+ },
+ {
+  "frame": 155,
+  "timestamp": "11:19",
+  "text": "The difference is that now you know what it is reaching for."
+ },
+ {
+  "frame": 156,
+  "timestamp": "11:22",
+  "text": "Go and look at something that finishes."
+ }
+]
