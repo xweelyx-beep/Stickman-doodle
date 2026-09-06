@@ -1,12 +1,11 @@
 # Style rules
 
 Two kinds of rule live here. The **house production method** is verified and
-applies today. The **channel visual system** is `[BLOCKED]` — two finished
-episodes define it and neither has been analysed, because they sit on a local
-Windows drive this environment cannot reach.
-
-**Do not fill a blocked section from imagination.** A lock invented here would
-contradict footage that already exists, which is worse than no lock at all.
+applies today. The **channel visual system** was locked 2026-09-06 from an
+operator-directed Zenn+Rico benchmark session — see `docs/channel-bible.md`
+section 6 for the pivot note. The two pre-existing unanalyzed episodes (still
+on an unreachable Windows drive) are now legacy assets, not the blocking
+condition for this section.
 
 Source: `docs/channel-bible.md` sections 6, 9 and 10.
 
@@ -56,25 +55,24 @@ habit loops and what to change. The same title belongs on Lilweid when it asks
 what the eating is protecting. If a script cannot say which of the two it is
 doing, it is not ready.
 
-## 4. Visual system `[BLOCKED]`
+## 4. Visual system — locked 2026-09-06
 
-Not known. To be extracted from the finished footage, not invented:
+Full lock lives in `docs/channel-bible.md` section 6 — palette hex table,
+7px/1080p outline weight, flat 2-tone cel shading, the two-background split
+(light-grey for reference sheets, Deep Slate/Charcoal for scenes), the
+push-in=tension/pull-back=release camera convention, and the 3-pivot
+Extreme-Close-Up signature shot. Not repeated here in full to avoid the two
+copies drifting — read the bible section for the authoritative version.
 
-- Palette and background treatment
-- Line weight
-- Text-on-screen style and typography
-- Transition vocabulary
-- How diagrams and numbers are drawn
-- Camera behaviour, if any
-- Pacing in seconds per beat
+Pacing: 3.5–4.0s average editorial beat-change rate inside the house
+method's 5s/clip ceiling. For comparison, the sibling channels sit at **4.7s
+per scene** (Lilweid) and **8.3s per scene** (Known Unknowns); Rico
+Animations measured at **3.0s** average via real scene analysis.
 
-For comparison once measured, the sibling channels sit at **4.7 s per scene**
-(Lilweid) and **8.3 s per scene** (Known Unknowns). A modern explainer channel
-would be *expected* to run faster than both — that is an expectation, not a
-measurement, and must not be written in as a lock.
-
-`scripts/config/analytics.json` records `pacing.stickman: null` for the same
-reason.
+`scripts/config/analytics.json` still records `pacing.stickman: null` —
+that's real production data (from actual published episodes), not the same
+thing as this locked pre-production target, and should stay null until real
+footage exists to measure.
 
 ## 5. Voice `[BLOCKED]`
 
@@ -90,12 +88,13 @@ unmodified here produces the wrong sign-off.
 `scripts/config/elevenlabs.json` as `locked: false`, `"operator preference, not
 final"`. Picking a voice id does not unblock this section.
 
-## 6. Episode architecture `[BLOCKED]`
+## 6. Episode architecture — locked 2026-09-06
 
-To be read off the finished episode. Lilweid and Known Unknowns each turned out
-to have a strict repeatable beat structure — six and nine beats respectively.
-Assume this one does too and read it off the footage rather than imposing a
-generic explainer template.
+~450–550 words, ~45–55 beats, 2.5–3 min runtime: cold open → 3–4 escalating
+independent mechanism reveals (each with a named researcher + concrete study)
+→ exactly 3 false-summit retention pivots interleaved between them →
+actionable circuit-level resolution → closing callback bookend. Full detail
+and the 8-episode topic roadmap: `docs/channel-bible.md` section 8.
 
 ## 7. What unblocks sections 4–6
 

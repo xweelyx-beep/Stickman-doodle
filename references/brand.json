@@ -13,9 +13,9 @@
       "note": null
     },
     "name": {
-      "done": false,
-      "value": null,
-      "note": "canon section 4 (Naming) is still [TBD]"
+      "done": true,
+      "value": "Wired Wrong",
+      "note": "Locked 2026-09-06 via the Zenn+Rico benchmark council session. Canon section 4 updated to match."
     },
     "identifier_name": {
       "done": false,
@@ -38,5 +38,5 @@
       "note": null
     }
   },
-  "updated_utc": "2026-08-29T00:00:00Z"
+  "updated_utc": "2026-09-06T00:00:00Z"
 }

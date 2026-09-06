@@ -36,6 +36,44 @@ Never five fingers. Never a nose or ears. Never visible elbow or knee joints.
 Never photoreal, 3D-rendered, sketchy or hand-drawn-doodle. Never a different
 hoodie colour without an explicit wardrobe change instruction.
 
+## Palette lock (added 2026-09-06)
+
+The traits above are unchanged. This adds hex values and a background split
+that did not exist before:
+
+| Role | Hex |
+|---|---|
+| Hoodie | `#2563EB` base / `#1D4ED8` shadow |
+| Head / gloves | `#F8FAFC` |
+| Outline | `#0B0F19` at 7px uniform stroke (1080p reference) |
+| Trousers | `#334155` |
+| Sneakers / soles | `#F1F5F9` / `#64748B` |
+
+**Two backgrounds now coexist, deliberately, for different purposes:**
+
+- **This reference sheet's plain light-grey gradient background stays
+  unchanged** — it's for isolation/turnaround clarity, not a scene lock.
+- **In-episode scene backgrounds use Deep Slate `#0F172A` → Charcoal `#1E293B`**
+  (`docs/channel-bible.md` section 6). Never cross-apply one to the other.
+
+## Expression chart (locked 2026-09-06)
+
+Built from eye/brow/mouth variation only — no nose or ears to work with.
+
+| Expression | Eyes | Brows | Mouth |
+|---|---|---|---|
+| Neutral/Explaining | Round, relaxed, direct-to-camera | Level, slightly arched | Small closed smile (base lock) |
+| Startled/Surprised | Massively widened, pupils small | Raised high, sharp | Small open "o" |
+| Anxious/Tense | Slightly narrowed, darting | Drawn inward, tense | Flat, pressed thin |
+| Mischievous/Realization | One squinted, one wide | One raised, asymmetric | Small closed smirk |
+| Determined/Clenched | Focused, steady, slight narrow | Level, set firm | Small closed, firm line |
+| Relieved/Confident | Soft, relaxed | Level, relaxed | Small closed smile, slightly wider than neutral |
+
+**Thumbnail-only hyper-expression tier:** wider eyes than Startled/Surprised,
+near-vertical brows, mouth open further than the "o" — for thumbnail salience
+only, never used in-episode. Still respects every never-clause below (no
+nose/ears/joints, gloves stay on).
+
 ## Prompt block, paste verbatim
 
 > Flat vector cartoon character, thick uniform black outlines, cel shading.
@@ -68,7 +106,8 @@ From bible section 10:
 - **3-panel character sheet** — headless front, full rear, tight chest-up face
   lock. The bible says generate it from the reference image before episode
   three, so later prompts have a real turnaround to reference rather than words.
-- **Expression sheet.**
+- **Drawn expression sheet.** The written 6-expression chart above is locked;
+  the drawn/rendered version is not.
 - **Side and rear views.**
 - **Walk cycle.**
 
