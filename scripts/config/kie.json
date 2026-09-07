@@ -12,7 +12,7 @@
     "resolution": "1080p"
   },
   "image": {
-    "model": null,
+    "model": "flux",
     "candidates": ["gpt-image", "nano-banana", "seedream", "flux"],
     "aspect_thumbnail": "16:9",
     "resolution": "1280x720",
